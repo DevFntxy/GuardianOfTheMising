@@ -101,3 +101,93 @@ Se asume que:
 - Existirá acceso a Internet durante el uso normal del sistema.
 - Los servicios de mapas y geolocalización estarán disponibles.
 - El servidor permanecerá disponible para recibir y procesar las solicitudes del sistema.
+
+---
+# Tecnologías Utilizadas
+
+<p align="center">
+
+<p align="center">
+
+<img src="https://img.shields.io/badge/Angular-DD0031?style=for-the-badge&logo=angular&logoColor=white" alt="Angular">
+<img src="https://img.shields.io/badge/Android-3DDC84?style=for-the-badge&logo=android&logoColor=white" alt="Android">
+<img src="https://img.shields.io/badge/Kotlin-7F52FF?style=for-the-badge&logo=kotlin&logoColor=white" alt="Kotlin">
+<img src="https://img.shields.io/badge/Wear%20OS-4285F4?style=for-the-badge&logo=wearos&logoColor=white" alt="Wear OS">
+
+<br>
+
+<img src="https://img.shields.io/badge/Node.js-5FA04E?style=for-the-badge&logo=nodedotjs&logoColor=white" alt="Node.js">
+<img src="https://img.shields.io/badge/Express-000000?style=for-the-badge&logo=express&logoColor=white" alt="Express">
+<img src="https://img.shields.io/badge/SQL%20Server-CC2927?style=for-the-badge&logo=microsoftsqlserver&logoColor=white" alt="SQL Server">
+
+<br>
+
+<img src="https://img.shields.io/badge/JWT-000000?style=for-the-badge&logo=jsonwebtokens&logoColor=white" alt="JWT">
+<img src="https://img.shields.io/badge/bcrypt-4CAF50?style=for-the-badge" alt="bcrypt">
+<img src="https://img.shields.io/badge/Google%20Maps-4285F4?style=for-the-badge&logo=googlemaps&logoColor=white" alt="Google Maps">
+<img src="https://img.shields.io/badge/Firebase%20FCM-FFCA28?style=for-the-badge&logo=firebase&logoColor=black" alt="Firebase">
+
+<br>
+
+<img src="https://img.shields.io/badge/REST%20API-02569B?style=for-the-badge" alt="REST API">
+<img src="https://img.shields.io/badge/Git-F05032?style=for-the-badge&logo=git&logoColor=white" alt="Git">
+<img src="https://img.shields.io/badge/GitHub-181717?style=for-the-badge&logo=github&logoColor=white" alt="GitHub">
+
+</p>
+
+</p>
+
+El desarrollo del ecosistema de seguridad personal se basa en una arquitectura cliente-servidor, utilizando tecnologías modernas para garantizar escalabilidad, mantenimiento e integración entre las diferentes plataformas.
+
+| Categoría | Tecnología | Descripción |
+|-----------|------------|-------------|
+| **Frontend Web** | Angular | Desarrollo de la plataforma web administrativa utilizando una arquitectura basada en componentes. |
+| **Frontend Móvil** | Android (Kotlin) | Desarrollo de la aplicación móvil para dispositivos Android. |
+| **Smartwatch** | Wear OS (Kotlin) | Desarrollo de la aplicación para relojes inteligentes compatibles con Wear OS. |
+| **Backend** | Node.js | Entorno de ejecución para el servidor y la lógica del sistema. |
+| **Framework Backend** | Express.js | Framework para la creación de la API REST que comunica todas las plataformas. |
+| **Base de Datos** | SQL Server | Almacenamiento de usuarios, geocercas, alertas, evidencia e historial del sistema. |
+| **ORM / Driver** | mssql | Conexión entre Node.js y SQL Server. |
+| **Autenticación** | JSON Web Token (JWT) | Gestión de autenticación y autorización mediante tokens seguros. |
+| **Encriptación** | bcrypt | Cifrado de contraseñas antes de almacenarlas en la base de datos. |
+| **Mapas y Geolocalización** | Google Maps API | Visualización de mapas, ubicación en tiempo real y administración de geocercas. |
+| **Notificaciones Push** | Firebase Cloud Messaging (FCM) | Envío de alertas y notificaciones en tiempo real a dispositivos móviles. |
+| **Comunicación** | REST API | Intercambio de información entre la aplicación móvil, smartwatch y plataforma web. |
+| **Control de Versiones** | Git | Administración y seguimiento de los cambios del código fuente. |
+| **Repositorio** | GitHub | Almacenamiento y colaboración del código del proyecto. |
+
+---
+
+# Arquitectura Tecnológica
+
+```text
+                        +----------------------+
+                        |   Plataforma Web     |
+                        |      Angular         |
+                        +----------+-----------+
+                                   |
+                              REST API (HTTPS)
+                                   |
+        +--------------------------+--------------------------+
+        |                                                     |
++-------+--------+                                   +--------+-------+
+| Aplicación     |                                   |   Smartwatch   |
+| Android Kotlin |                                   | Wear OS Kotlin |
++-------+--------+                                   +--------+-------+
+        |                                                     |
+        +--------------------------+--------------------------+
+                                   |
+                            Node.js + Express
+                                   |
+                     Autenticación (JWT + bcrypt)
+                                   |
+                           SQL Server Database
+                                   |
+        +----------------------------------------------------+
+        | Usuarios | Alertas | Geocercas | Evidencias | Logs |
+        +----------------------------------------------------+
+                                   |
+                     Firebase Cloud Messaging
+                                   |
+                     Notificaciones Push en tiempo real
+```
