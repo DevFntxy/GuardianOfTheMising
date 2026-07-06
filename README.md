@@ -1,6 +1,6 @@
 # GuardianOfTheMising
 <p align="center">
-<img src="img/image.png" alt="GuardianOfTheMising Logo" width="240" />
+<img src="img/Guardiana.png" alt="GuardianOfTheMising Logo" width="240" />
 </p>
 
 El proyecto consiste en el desarrollo de un ecosistema tecnológico orientado a la seguridad personal, integrado por una aplicación móvil para Android, una aplicación para smartwatch con Wear OS y una plataforma web de administración. El sistema permitirá monitorear la ubicación de los usuarios en tiempo real, administrar zonas seguras y de riesgo mediante geocercas, detectar situaciones de emergencia y generar alertas automáticas hacia contactos de confianza.
@@ -226,7 +226,8 @@ La documentación del proyecto se encuentra organizada para facilitar el manteni
 
 ## Documentos disponibles
 
-- Documento de Análisis de Requerimientos.
+- Documento de Análisis de Requerimientos Funcionales y No Funcionales.
+- Reglas de Negocio(BR)
 - Casos de Uso.
 - Diagramas UML.
 - Modelo Entidad-Relación.
@@ -298,6 +299,14 @@ El desarrollo del proyecto se llevará a cabo mediante un equipo multidisciplina
 | Mauricio Rosales Gabriel     | `220859`   | Desarrollo Backend                  | [@elmau0834x](https://github.com/elmau0834x)               |
 | Erick Matias Granillo Mejia  | `230045`   | Desarrollo Backend                  | [@EMATIAS](https://github.com/EMATIAS230045)               |
 
+---
+
+# Organigrama
+<p align="center">
+<img src="img/Organigrama.png" alt="Organigrama Team" width="240" />
+</p>
+
+---
 
 ## Metodología de Trabajo
 
@@ -309,6 +318,13 @@ El proyecto seguirá la metodología ágil **Scrum**, organizando el desarrollo 
 - Pruebas.
 - Revisión.
 - Retrospectiva.
+
+---
+# Diagrama de Gant
+
+<p align="center">
+<img src="img/Gantt.jpeg" alt="Diagrama de Gant" width="240" />
+</p>
 
 ---
 
@@ -389,6 +405,7 @@ La comunicación entre los integrantes del proyecto se realizará utilizando her
 - Microsoft Teams.
 - WhatsApp.
 - GitHub.
+- Jira
 - Reuniones semanales.
 - Revisión de avances por Sprint.
 
