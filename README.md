@@ -303,7 +303,7 @@ El desarrollo del proyecto se llevará a cabo mediante un equipo multidisciplina
 
 # Organigrama
 <p align="center">
-<img src="img/Organigrama.png" alt="Organigrama Team" width="240" />
+<img src="img/Organigrama.png" alt="Organigrama Team" width="500" />
 </p>
 
 ---
@@ -323,7 +323,7 @@ El proyecto seguirá la metodología ágil **Scrum**, organizando el desarrollo 
 # Diagrama de Gant
 
 <p align="center">
-<img src="img/Gantt.jpeg" alt="Diagrama de Gant" width="240" />
+<img src="img/Gantt.jpeg" alt="Diagrama de Gant" width="500" />
 </p>
 
 ---
