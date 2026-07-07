@@ -3,7 +3,7 @@
 <img src="img/Guardiana.png" alt="GuardianOfTheMising Logo" width="240" />
 </p>
 
-El proyecto consiste en el desarrollo de un ecosistema tecnológico orientado a la seguridad personal, integrado por una aplicación móvil para Android, una aplicación para smartwatch con Wear OS y una plataforma web de administración. El sistema permitirá monitorear la ubicación de los usuarios en tiempo real, administrar zonas seguras y de riesgo mediante geocercas, detectar situaciones de emergencia y generar alertas automáticas hacia contactos de confianza.
+El proyecto consiste en el desarrollo de un ecosistema tecnológico orientado a la seguridad personal, integrado por una aplicación móvil para Android, una aplicación para smartwatch con Wear OS y una plataforma web de administración. El sistema permitirá monitorear la ubicación de los usuarios en tiempo real, administrar zonas seguras y de riesgo mediante geocercas, detectar situaciones de emergencia y generar alertas automáticas hacia contactos de confianzaa.
 
 Además, la solución incorporará la captura de evidencia durante una emergencia, incluyendo fotografías, audio, ubicación GPS y la fecha y hora del incidente, permitiendo un mejor seguimiento y respuesta ante situaciones de riesgo.
 
