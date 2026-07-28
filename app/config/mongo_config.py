@@ -20,6 +20,7 @@ MONGO_URI = os.getenv("MONGO_URI", "mongodb://localhost:27017")
 MONGO_DB_NAME = os.getenv("MONGO_DB_NAME", "hospital_230892_geo")
 
 COLLECTION_UBICACIONES = "ubicaciones"
+COLLECTION_GEOCERCAS = "geocercas"
 
 # ---------------------------------------------------------------------------
 # Cliente global (singleton) — se instancia una sola vez en el ciclo de vida
@@ -70,3 +71,11 @@ async def ensure_indexes() -> None:
     await coleccion.create_index(
         [("id_usuario", 1), ("fecha_hora", -1)], name="idx_usuario_fecha"
     )
+
+    # --- Módulo 4: geocercas -------------------------------------------
+    geocercas = db[COLLECTION_GEOCERCAS]
+    await geocercas.create_index([("ubicacion", "2dsphere")], name="idx_geocerca_2dsphere")
+    await geocercas.create_index(
+        [("tipo_zona", 1), ("activa", 1)], name="idx_tipo_zona_activa"
+    )
+    await geocercas.create_index([("id_usuario", 1)], name="idx_geocerca_usuario")

@@ -7,6 +7,7 @@ from app.config.mongo_config import (
     ensure_indexes,
 )
 from app.modules.sesni.routes.ubicacion_routes import router as ubicacion_router
+from app.modules.sesni.routes.geocerca_routes import router as geocerca_router
 
 app = FastAPI(
     title="GuardianOfTheMising API",
@@ -42,3 +43,4 @@ async def shutdown():
 
 
 app.include_router(ubicacion_router)
+app.include_router(geocerca_router)
