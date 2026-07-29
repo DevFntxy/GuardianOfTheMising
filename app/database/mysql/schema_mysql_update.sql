@@ -2,8 +2,8 @@
 -- GuardianOfTheMising - Esquema MySQL (version DEMO / recortada)
 -- Autor: Jose Arturo Garcia Gonzalez (230629) - Diseño y Estructura de BD
 -- Motor: MySQL 8.x
--- Solo lo indispensable para la simulacion: Usuarios+Roles, Alertas,
--- ContactosEmergencia, Evidencias. Geocercas y Ubicaciones viven en
+-- Solo lo indispensable para la simulacion: Usuarios+Roles, Dispositivos,
+-- Alertas, ContactosEmergencia, Evidencias. Geocercas y Ubicaciones viven en
 -- MongoDB (ver setup_mongo.js).
 -- =====================================================================
 
@@ -36,6 +36,7 @@ CREATE TABLE Usuarios (
     contrasena_hash     VARCHAR(255) NOT NULL,
     telefono            VARCHAR(20) NULL,
     fecha_nacimiento    DATE NULL,
+    tipo_sangre         ENUM('A+','A-','B+','B-','AB+','AB-','O+','O-') NULL,
     id_rol              INT NOT NULL,
     activo              TINYINT(1) NOT NULL DEFAULT 1,
     fecha_registro      DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
@@ -45,6 +46,34 @@ CREATE TABLE Usuarios (
 ) ENGINE=InnoDB;
 
 CREATE INDEX idx_usuarios_correo ON Usuarios(correo);
+
+-- ---------------------------------------------------------------------
+-- 2.1 Dispositivos
+--     id_dispositivo_vinculado: si este renglon es un wearos, aqui va
+--     el id_dispositivo del celular Android con el que esta emparejado.
+--     Asi el backend sabe a donde reenviar/notificar cuando el boton de
+--     panico se presiona desde el reloj (que normalmente no tiene camara
+--     para la evidencia, esa parte la hace el celular vinculado).
+-- ---------------------------------------------------------------------
+CREATE TABLE Dispositivos (
+    id_dispositivo            INT AUTO_INCREMENT PRIMARY KEY,
+    id_usuario                INT NOT NULL,
+    tipo_dispositivo          ENUM('android','wearos') NOT NULL,
+    token_fcm                 VARCHAR(255) NULL COMMENT 'Token push de Firebase, para saber donde mandar la alerta',
+    modelo                    VARCHAR(100) NULL,
+    id_dispositivo_vinculado  INT NULL COMMENT 'Solo aplica si tipo_dispositivo=wearos: el id_dispositivo del celular emparejado',
+    activo                    TINYINT(1) NOT NULL DEFAULT 1,
+    fecha_registro            DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    ultima_conexion           DATETIME NULL,
+    CONSTRAINT fk_dispositivos_usuario
+        FOREIGN KEY (id_usuario) REFERENCES Usuarios(id_usuario)
+        ON UPDATE CASCADE ON DELETE CASCADE,
+    CONSTRAINT fk_dispositivos_vinculado
+        FOREIGN KEY (id_dispositivo_vinculado) REFERENCES Dispositivos(id_dispositivo)
+        ON UPDATE CASCADE ON DELETE SET NULL
+) ENGINE=InnoDB;
+
+CREATE INDEX idx_dispositivos_usuario ON Dispositivos(id_usuario);
 
 -- ---------------------------------------------------------------------
 -- 3. ContactosEmergencia
@@ -75,6 +104,7 @@ CREATE TABLE ContactosEmergencia (
 CREATE TABLE Alertas (
     id_alerta          INT AUTO_INCREMENT PRIMARY KEY,
     id_usuario         INT NOT NULL,
+    id_dispositivo     INT NULL COMMENT 'Desde que dispositivo se disparo (reloj o celular)',
     id_geocerca_mongo  CHAR(24) NULL COMMENT 'ObjectId de la geocerca en MongoDB. Sin FK real: se valida en el backend.',
     latitud            DECIMAL(10,7) NOT NULL,
     longitud           DECIMAL(10,7) NOT NULL,
@@ -83,7 +113,10 @@ CREATE TABLE Alertas (
     comentario         VARCHAR(255) NULL,
     CONSTRAINT fk_alertas_usuario
         FOREIGN KEY (id_usuario) REFERENCES Usuarios(id_usuario)
-        ON UPDATE CASCADE ON DELETE CASCADE
+        ON UPDATE CASCADE ON DELETE CASCADE,
+    CONSTRAINT fk_alertas_dispositivo
+        FOREIGN KEY (id_dispositivo) REFERENCES Dispositivos(id_dispositivo)
+        ON UPDATE CASCADE ON DELETE SET NULL
 ) ENGINE=InnoDB;
 
 CREATE INDEX idx_alertas_usuario_fecha ON Alertas(id_usuario, fecha_hora);
