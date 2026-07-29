@@ -10,10 +10,10 @@
 
 | Motor | Contiene | Por qué |
 |---|---|---|
-| **MySQL** | `Roles`, `Usuarios`, `ContactosEmergencia`, `Alertas`, `Evidencias` | Datos con relaciones fuertes entre sí, necesitan integridad referencial real (FK) |
+| **MySQL** | `Roles`, `Usuarios`, `Dispositivos`, `ContactosEmergencia`, `Alertas`, `Evidencias` | Datos con relaciones fuertes entre sí, necesitan integridad referencial real (FK) |
 | **MongoDB** | `geocercas`, `ubicaciones` | Escritura de alta frecuencia (GPS) e indexado geoespacial nativo (`2dsphere`) |
 
-Entidades recortadas del alcance original (no aportan a la demo, se agregan después sin romper nada): `Dispositivos`, `Notificaciones`, `HistorialEventos`.
+Entidades recortadas del alcance original (no aportan a la demo, se agregan después sin romper nada): `Notificaciones`, `HistorialEventos`.
 
 ---
 
@@ -43,7 +43,22 @@ Entidades recortadas del alcance original (no aportan a la demo, se agregan desp
 | activo | TINYINT(1) | DEFAULT 1 | Baja lógica |
 | fecha_registro | DATETIME | DEFAULT NOW | |
 
-### 2.3 `ContactosEmergencia`
+### 2.3 `Dispositivos`
+| Campo | Tipo | Restricciones | Descripción |
+|---|---|---|---|
+| id_dispositivo | INT | PK, AI | |
+| id_usuario | INT | FK → Usuarios | |
+| tipo_dispositivo | ENUM('android','wearos') | NOT NULL | |
+| token_fcm | VARCHAR(255) | NULL | Token push de Firebase — para saber a dónde mandar la alerta |
+| modelo | VARCHAR(100) | NULL | 'Samsung Galaxy S23', 'Galaxy Watch 6', etc. |
+| **id_dispositivo_vinculado** | **INT** | **FK → Dispositivos (auto-referencia), NULL** | **Si es un wearos, aquí va el `id_dispositivo` del celular Android con el que está emparejado** |
+| activo | TINYINT(1) | DEFAULT 1 | |
+| fecha_registro | DATETIME | DEFAULT NOW | |
+| ultima_conexion | DATETIME | NULL | |
+
+> **Por qué la auto-referencia:** el reloj normalmente no tiene cámara para capturar evidencia. Cuando el botón de pánico se presiona desde el smartwatch, el backend necesita saber a qué celular específico reenviar la orden de "captura evidencia ahora". Con `id_dispositivo_vinculado` no basta con "cualquier dispositivo de este usuario" — se sabe exactamente cuál es el celular emparejado con ese reloj.
+
+### 2.4 `ContactosEmergencia`
 | Campo | Tipo | Restricciones | Descripción |
 |---|---|---|---|
 | id_contacto | INT | PK, AI | |
@@ -55,11 +70,12 @@ Entidades recortadas del alcance original (no aportan a la demo, se agregan desp
 | prioridad | INT | DEFAULT 1 | Orden en que se notifica |
 | fecha_registro | DATETIME | DEFAULT NOW | |
 
-### 2.4 `Alertas`
+### 2.5 `Alertas`
 | Campo | Tipo | Restricciones | Descripción |
 |---|---|---|---|
 | id_alerta | INT | PK, AI | |
 | id_usuario | INT | FK → Usuarios | |
+| id_dispositivo | INT | FK → Dispositivos, NULL | Desde qué dispositivo se disparó (reloj o celular) |
 | id_geocerca_mongo | CHAR(24) | NULL | ObjectId de Mongo. `NULL` = botón de pánico manual; con valor = disparada por geocerca. Sin FK real |
 | latitud | DECIMAL(10,7) | NOT NULL | |
 | longitud | DECIMAL(10,7) | NOT NULL | |
@@ -67,9 +83,9 @@ Entidades recortadas del alcance original (no aportan a la demo, se agregan desp
 | estado | ENUM('activa','atendida','cancelada','falsa_alarma') | DEFAULT 'activa' | |
 | comentario | VARCHAR(255) | NULL | |
 
-> Ya no hay catálogo de tipos de alerta: todo es una sola **"Alerta de peligro"** genérica.
+> Ya no hay catálogo de tipos de alerta: todo es una sola **"Alerta de peligro"** genérica. Con `id_dispositivo` se sabe si se disparó desde el reloj o el celular, y de ahí (vía `id_dispositivo_vinculado`) a qué celular reenviar la captura de evidencia si fue el reloj.
 
-### 2.5 `Evidencias`
+### 2.6 `Evidencias`
 | Campo | Tipo | Restricciones | Descripción |
 |---|---|---|---|
 | id_evidencia | INT | PK, AI | |
@@ -123,8 +139,11 @@ Ver `setup_mongo.js` para el script de creación con validación e índices `2ds
 
 **FK reales (MySQL):**
 - `Roles (1) —— (N) Usuarios`
+- `Usuarios (1) —— (N) Dispositivos`
+- `Dispositivos (1) —— (N) Dispositivos` (auto-referencia: reloj → celular vinculado, vía `id_dispositivo_vinculado`)
 - `Usuarios (1) —— (N) ContactosEmergencia`
 - `Usuarios (1) —— (N) Alertas`
+- `Dispositivos (1) —— (N) Alertas` (opcional, qué dispositivo la disparó)
 - `Alertas (1) —— (N) Evidencias`
 
 **Referencias lógicas (sin FK real, MySQL ↔ MongoDB, se validan en backend):**
@@ -136,7 +155,7 @@ Ver `setup_mongo.js` para el script de creación con validación e índices `2ds
 
 ## 6. Pendiente / fuera del alcance de la demo
 
-- `Dispositivos`, `Notificaciones`, `HistorialEventos` — se cortaron para el demo, no aparecen en ninguna pantalla del front. Se agregan después si el proyecto crece más allá de la simulación.
+- `Notificaciones`, `HistorialEventos` — se cortaron para el demo, no aparecen en ninguna pantalla del front. Se agregan después si el proyecto crece más allá de la simulación.
 - Sesiones JWT (stateless vs. persistidas) — sin definir aún.
 - Política de retención de `ubicaciones` en Mongo (crece rápido, valorar TTL index).
 - Validación manual de integridad MySQL ↔ Mongo (borrado en cascada, existencia de `id_usuario`) — responsabilidad del backend, no de la BD.
