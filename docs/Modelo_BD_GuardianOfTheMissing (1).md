@@ -81,6 +81,7 @@ Entidades recortadas del alcance original (no aportan a la demo, se agregan desp
 | longitud | DECIMAL(10,7) | NOT NULL | |
 | fecha_hora | DATETIME | DEFAULT NOW | |
 | estado | ENUM('activa','atendida','cancelada','falsa_alarma') | DEFAULT 'activa' | |
+| nivel_riesgo | ENUM('baja','media','alta') | DEFAULT 'media' | Qué tan grave es la alerta |
 | comentario | VARCHAR(255) | NULL | |
 
 > Ya no hay catálogo de tipos de alerta: todo es una sola **"Alerta de peligro"** genérica. Con `id_dispositivo` se sabe si se disparó desde el reloj o el celular, y de ahí (vía `id_dispositivo_vinculado`) a qué celular reenviar la captura de evidencia si fue el reloj.
@@ -156,6 +157,7 @@ Ver `setup_mongo.js` para el script de creación con validación e índices `2ds
 ## 6. Pendiente / fuera del alcance de la demo
 
 - `Notificaciones`, `HistorialEventos` — se cortaron para el demo, no aparecen en ninguna pantalla del front. Se agregan después si el proyecto crece más allá de la simulación.
+- **Evidencias (foto/audio/video): se evaluó mover el almacenamiento de Google Drive a MongoDB (GridFS) o a Firebase Storage.** Decisión del equipo: **se queda en Google Drive por ahora** — los 15 GB gratis alcanzan para la demo. Nota para retomar más adelante si el proyecto crece: MongoDB Atlas gratis solo da 512 MB (menos que Drive, no más), así que si el espacio se vuelve un problema real, la alternativa más barata de migrar sería Firebase Storage (5 GB gratis, luego pago por uso), no Mongo.
 - Sesiones JWT (stateless vs. persistidas) — sin definir aún.
 - Política de retención de `ubicaciones` en Mongo (crece rápido, valorar TTL index).
 - Validación manual de integridad MySQL ↔ Mongo (borrado en cascada, existencia de `id_usuario`) — responsabilidad del backend, no de la BD.
