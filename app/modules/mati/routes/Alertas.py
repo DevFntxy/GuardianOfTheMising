@@ -10,7 +10,7 @@ from sqlalchemy.orm import Session
 from services.mysql.mysql import get_db
 #Este funciona como filtro para que cuando se envie un registro hacia las alerta primero
 #compruebe si tiene la estructura del esquema
-from schemas.alerta import AlertaCreate, AlertaResponse, AlertaUpdate
+from schemas.alerta import AlertaCreate, AlertaResponse, AlertaUpdate, AlertaPanicoCreate, AlertaCancelar
 #Esto es para traer nuestros controladores y llamarlos cuando se realice una peticion y decimos todo lo que esta aqui
 #refiere a el como alerta_controller
 from controllers import alerta as alerta_controller
@@ -52,3 +52,27 @@ async def eliminar(id_alerta: int, db: AsyncSession = Depends(get_db)):
     if not exito:
         raise HTTPException(status_code=404, detail="La alerta no existe")
     return None
+
+#Rutas para alertas inteligentes:
+
+
+@router.post("/panico", response_model=AlertaResponse, status_code=status.HTTP_201_CREATED)
+async def activar_boton_panico(
+    datos: AlertaPanicoCreate, 
+    db: AsyncSession = Depends(get_db)
+):
+    return await alerta_controller.crear_alerta_panico(db, datos)
+
+# routes/Alertas.py
+
+@router.post("/cancelar", response_model=AlertaResponse)
+async def cancelar_alerta(datos: AlertaCancelar, db: AsyncSession = Depends(get_db)):
+    return await alerta_controller.cancelar_alerta_con_pin(db, datos)
+
+@router.patch("/{id_alerta}/atender", response_model=AlertaResponse)
+async def atender_alerta(id_alerta: int, db: AsyncSession = Depends(get_db)):
+    return await alerta_controller.atender_alerta(db, id_alerta)
+
+@router.patch("/{id_alerta}/falsa-alarma", response_model=AlertaResponse)
+async def falsa_alarma(id_alerta: int, db: AsyncSession = Depends(get_db)):
+    return await alerta_controller.marcar_falsa_alarma(db, id_alerta)

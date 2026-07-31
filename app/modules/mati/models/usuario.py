@@ -17,11 +17,13 @@ class Usuario(Base):
     correo=Column(String(100),nullable=False)
     contrasena_hash = Column(String(255),nullable=False)
     telefono= Column(String(20),nullable=False)
+    pin_cancelacion = Column(String(255), nullable=True)
     fecha_nacimiento=Column(DateTime, nullable=False)
     tipo_sangre=Column(Enum('A+','A-','B+','B-','AB+','AB-','O+','O-'), name='sangre_tipo',nullable=False)
     id_rol = Column(Integer, ForeignKey("roles.id_rol"), server_default="1")
     activo= Column(String(2), server_default="1")
     fecha_registro= Column(DateTime, server_default=func.now())
+    max_intentos_pin = Column(Integer, default=3, nullable=True)
 
     alertas = relationship("Alerta", back_populates='usuario')
     rol= relationship("Rol", back_populates='usuarios')

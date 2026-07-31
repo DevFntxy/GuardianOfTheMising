@@ -1,4 +1,4 @@
-from pydantic import BaseModel, ConfigDict
+from pydantic import BaseModel, ConfigDict, Field
 from datetime import datetime
 from typing import Optional, Literal
 
@@ -11,7 +11,7 @@ class AlertaBase(BaseModel):
     latitud: float
     longitud: float
     comentario: Optional[str] = None
-    id_geocerca_mongo: Optional[str] = None
+    id_geocerca_mongo: Optional[str] = Field(default="Geo-01", examples=["Geo-01"])
     riesgo: Optional[RiesgoEnum] = "alto"
 
 
@@ -40,3 +40,18 @@ class AlertaResponse(AlertaBase):
     fecha_hora: Optional[datetime] = None
 
     model_config = ConfigDict(from_attributes=True)
+
+#Endpoints para la generacion de alertas inteligentes: 
+
+# Esquema exclusivo para la entrada del Botón de Pánico
+class AlertaPanicoCreate(BaseModel):
+    id_usuario: int
+    id_dispositivo: int
+    latitud: float
+    longitud: float
+    id_geocerca_mongo: Optional[str] = Field(default="Geo-01", examples=["Geo-01"])
+
+class AlertaCancelar(BaseModel):
+    id_alerta: int
+    id_usuario: int
+    pin: str = Field(..., description="PIN de cancelación de 4 a 6 dígitos", min_length=4, max_length=6)

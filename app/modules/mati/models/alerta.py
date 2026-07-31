@@ -19,14 +19,14 @@ class Alerta(Base):
     latitud = Column(DECIMAL(10, 7), nullable=False)
     longitud = Column(DECIMAL(10, 7), nullable=False)
     fecha_hora = Column(DateTime, server_default=func.now())
-    
     #  CORREGIDO: Quitar name='riesgoalerta' para que use el nombre real de la tabla ('riesgo')
     riesgo = Column(Enum('alto', 'medio', 'bajo'), server_default='alto')
-    
     # Este está BIEN porque en tu BD la columna sí se llama 'estado_alerta'
     estado = Column(Enum('activa', 'atendida', 'cancelada', 'falsa_alarma'), name='estado_alerta', server_default='activa')
-    
     comentario = Column(String(255))
+    intentos_fallidos = Column(Integer, default=0)
+    ultimo_intento_fallido = Column(DateTime(timezone=True), nullable=True)
+    
 
     usuario = relationship("Usuario", back_populates="alertas")
     dispositivo = relationship("Dispositivo", back_populates="alertas")
