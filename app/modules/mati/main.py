@@ -4,10 +4,10 @@ from fastapi import FastAPI
 from contextlib import asynccontextmanager
 # Importamos tus configuraciones de base de datos
 from services.mysql.mysql import engine, Base
-from services.Mongo.mongo import client
+from services.Mongo.mongo import client, crear_indices_mongo
 
 # Importamos tu nuevo archivo de rutas
-from routes import Alertas
+from routes import Alertas, mongo_test
 #from routes import evidencias
 
 @asynccontextmanager
@@ -17,6 +17,8 @@ async def lifespan(app: FastAPI):
     # Creamos las tablas de MySQL de forma asíncrona
     async with engine.begin() as conn:
         await conn.run_sync(Base.metadata.create_all)
+
+    await crear_indices_mongo()
         
     print(f"Motores listos: MySQL asíncrono y Mongo iniciados.")
     
@@ -37,6 +39,7 @@ app = FastAPI(
 # 3. Conectamos el archivo de rutas a la aplicación principal
 app.include_router(Alertas.router)
 #app.include_router(evidencias.router)
+app.include_router(mongo_test.router)
 
 # Puedes dejar el root aquí como comprobación de salud del servidor
 @app.get("/")
