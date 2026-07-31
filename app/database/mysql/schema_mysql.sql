@@ -110,6 +110,7 @@ CREATE TABLE Alertas (
     longitud           DECIMAL(10,7) NOT NULL,
     fecha_hora         DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
     estado             ENUM('activa','atendida','cancelada','falsa_alarma') NOT NULL DEFAULT 'activa',
+    nivel_riesgo       ENUM('baja','media','alta') NOT NULL DEFAULT 'media',
     comentario         VARCHAR(255) NULL,
     CONSTRAINT fk_alertas_usuario
         FOREIGN KEY (id_usuario) REFERENCES Usuarios(id_usuario)
