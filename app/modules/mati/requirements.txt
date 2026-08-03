@@ -35,6 +35,7 @@ MarkupSafe==3.0.3
 mdurl==0.1.2
 motor==3.7.1
 mysql-connector-python==9.7.0
+numpy>=1.24.0
 oauthlib==3.3.1
 proto-plus==1.28.2
 protobuf==7.35.1
@@ -57,6 +58,7 @@ requests-oauthlib==2.0.0
 rich==15.0.0
 rich-toolkit==0.20.3
 rignore==0.8.0
+scikit-learn>=1.2.0
 sentry-sdk==2.66.1
 shellingham==1.5.4
 SQLAlchemy==2.0.51
