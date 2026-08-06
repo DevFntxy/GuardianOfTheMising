@@ -3,8 +3,8 @@ from datetime import datetime, timezone, timedelta
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.future import select
 from app.database.models import Alerta, Usuario
-from schemas.alerta import AlertaCreate, AlertaUpdate, AlertaPanicoCreate
-from services.security import verificar_pin
+from app.modules.mati.schemas.alerta import AlertaCreate, AlertaUpdate, AlertaPanicoCreate
+from app.modules.mati.services.security import verificar_pin
 
 # CREAR
 async def crear_alerta(db: AsyncSession, alerta_data: AlertaCreate) -> Alerta:

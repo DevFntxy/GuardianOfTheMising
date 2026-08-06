@@ -1,7 +1,7 @@
 from fastapi import FastAPI
 from contextlib import asynccontextmanager
 from sqlmodel import SQLModel
-from database import motor
+from app.modules.mau.database import motor
 from routes import auth_routes, user_routes
 from routes import contactosEmergencia_routes
 

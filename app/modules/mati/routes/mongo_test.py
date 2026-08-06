@@ -1,7 +1,7 @@
 from fastapi import APIRouter, HTTPException, status, File, UploadFile, Form
-from schemas.mongo_test import UbicacionTestCreate, GeocercaTestCreate
+from app.modules.mati.schemas.mongo_test import UbicacionTestCreate, GeocercaTestCreate
 from fastapi.responses import StreamingResponse
-from services.Mongo.mongo import guardar_ubicacion_gps, crear_geocerca, probar_busqueda_geocerca, guardar_audio_gridfs, obtener_stream_audio_gridfs
+from app.modules.mati.services.Mongo.mongo import guardar_ubicacion_gps, crear_geocerca, probar_busqueda_geocerca, guardar_audio_gridfs, obtener_stream_audio_gridfs
 
 router = APIRouter(prefix="/mongo-test", tags=["Pruebas MongoDB"])
 

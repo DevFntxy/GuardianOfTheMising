@@ -5,9 +5,9 @@ from datetime import timedelta
 import jwt
 
 # Importaciones directas
-from database import obtener_sesion
+from app.modules.mau.database import obtener_sesion
 from app.database.models import Usuario, UsuarioCreate, UsuarioResponse, LoginRequest, TokenResponse, TokenBloqueado
-from security import (
+from app.modules.mau.security import (
     obtener_hash_contrasena, 
     verificar_contrasena, 
     crear_token,

@@ -7,10 +7,10 @@ from sqlalchemy.ext.asyncio import AsyncSession
 #funcionando como plantilla que vamos a rellenar con nuestras credenciales
 from sqlalchemy.orm import Session
 #Esta la funcion que continen las credenciales y nos ayuda a crear la conexion con mysql
-from services.mysql.mysql import get_db
+from app.modules.mati.services.mysql.mysql import get_db
 #Este funciona como filtro para que cuando se envie un registro hacia las alerta primero
 #compruebe si tiene la estructura del esquema
-from schemas.alerta import AlertaCreate, AlertaResponse, AlertaUpdate, AlertaPanicoCreate, AlertaCancelar
+from app.modules.mati.schemas.alerta import AlertaCreate, AlertaResponse, AlertaUpdate, AlertaPanicoCreate, AlertaCancelar
 #Esto es para traer nuestros controladores y llamarlos cuando se realice una peticion y decimos todo lo que esta aqui
 #refiere a el como alerta_controller
 from controllers import alerta as alerta_controller
@@ -20,7 +20,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from typing import List
 
 
-from services.mysql.mysql import get_db
+from app.modules.mati.services.mysql.mysql import get_db
 
 router = APIRouter(prefix="/alertas", tags=["Alertas"])
 

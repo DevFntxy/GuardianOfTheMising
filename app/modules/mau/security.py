@@ -7,7 +7,7 @@ from fastapi import Depends, HTTPException, status
 from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
 from app.database.models import TokenBloqueado
 from sqlmodel import Session, select
-from database import obtener_sesion
+from app.modules.mau.database import obtener_sesion
 
 load_dotenv(find_dotenv())
 

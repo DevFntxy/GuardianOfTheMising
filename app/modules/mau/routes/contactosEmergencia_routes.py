@@ -1,7 +1,7 @@
 from fastapi import APIRouter, Depends, HTTPException, status
 from sqlmodel import Session, select
-from database import obtener_sesion
-from security import obtener_usuario_actual
+from app.modules.mau.database import obtener_sesion
+from app.modules.mau.security import obtener_usuario_actual
 from app.database.models import (
     ContactoEmergencia,
     ContactoEmergenciaCreate,

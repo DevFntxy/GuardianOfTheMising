@@ -2,12 +2,12 @@ from fastapi import APIRouter, Depends, HTTPException, status
 from sqlmodel import Session, select, func
 from typing import Dict, Any
 from datetime import datetime, timedelta, timezone
-from database import obtener_sesion
-from security import obtener_usuario_actual
+from app.modules.mau.database import obtener_sesion
+from app.modules.mau.security import obtener_usuario_actual
 from app.database.models import Alerta, EstadoAlerta, Usuario
 
 # Suponiendo que tienes tus dependencias configuradas en otros módulos:
-# from database import get_session
+# from app.modules.mau.database import get_session
 # from dependencies import obtener_usuario_actual
 # from models import Alerta, EstadoAlerta, Usuario
 
