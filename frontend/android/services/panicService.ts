@@ -41,7 +41,21 @@ const asegurarPermisoNotificaciones = async (): Promise<boolean> => {
  * Envía el reporte de emergencia (notificación nativa local).
  * TODO: aquí se enviaría también el reporte real al backend / AlertsService.
  */
+import { apiFetch } from './api';
+
 export const activarBotonPanico = async () => {
+    try {
+        await apiFetch('/alertas/panico', {
+            method: 'POST',
+            body: JSON.stringify({
+                id_usuario: 1, // esto debe venir del contexto real
+                id_dispositivo: 'dispositivo-1',
+                latitud: 10,
+                longitud: 9,
+                id_geocerca_mongo: 'zona-segura'
+            })
+        });
+    } catch (e) { console.error('Error enviando panico', e); }
     const permisoConcedido = await asegurarPermisoNotificaciones();
     if (!permisoConcedido) return;
 
@@ -126,3 +140,4 @@ export function useShakeParaPanico(activo: boolean = true) {
         };
     }, [activo]);
 }
+

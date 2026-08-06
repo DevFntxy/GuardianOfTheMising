@@ -50,7 +50,47 @@ const usuarios: User[] = [
 // TODO: en un futuro esto podría vivir en un Context de React o en AsyncStorage para persistencia.
 let usuarioActualId: number | null = null;
 
+import { apiFetch, setAuthToken, removeAuthToken } from './api';
+
 export const UserService = {
+    async apiLogin(correo: string, contrasena: string) {
+        const data = await apiFetch('/auth/login', {
+            method: 'POST',
+            body: JSON.stringify({ correo, contrasena }),
+        });
+        if (data.access_token) {
+            await setAuthToken(data.access_token);
+            // Obtenemos el perfil real para guardarlo en la cache
+            const me = await apiFetch('/usuarios/me');
+            const mappedUser: User = {
+                id: me.id_usuario,
+                username: me.nombre,
+                email: me.correo,
+                password: '',
+                bloodType: me.tipo_sangre,
+                phonenumber: me.telefono,
+                contactIds: [],
+                groups: [],
+                state: 'Activo',
+                pfp: '',
+                lat: 0,
+                long: 0,
+                lastUbication: { lat: 0, long: 0 },
+                role: me.id_rol === 1 ? 'admin' : 'user'
+            };
+            // Lo metemos al arreglo falso para que las demas vistas sigan funcionando
+            usuarios.push(mappedUser);
+            this.iniciarSesion(mappedUser.id);
+        }
+        return data;
+    },
+
+    async apiRegister(data: any) {
+        return await apiFetch('/auth/registro', {
+            method: 'POST',
+            body: JSON.stringify(data),
+        });
+    },
     getUsuarios(): User[] {
         return usuarios;
     },
@@ -166,3 +206,4 @@ export const UserService = {
     },
     */
 };
+
