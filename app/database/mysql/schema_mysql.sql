@@ -112,6 +112,8 @@ CREATE TABLE Alertas (
     estado             ENUM('activa','atendida','cancelada','falsa_alarma') NOT NULL DEFAULT 'activa',
     nivel_riesgo       ENUM('baja','media','alta') NOT NULL DEFAULT 'media',
     comentario         VARCHAR(255) NULL,
+    intentos_fallidos  INT NOT NULL DEFAULT 0,
+    ultimo_intento_fallido DATETIME NULL,
     CONSTRAINT fk_alertas_usuario
         FOREIGN KEY (id_usuario) REFERENCES Usuarios(id_usuario)
         ON UPDATE CASCADE ON DELETE CASCADE,
@@ -141,6 +143,17 @@ CREATE TABLE Evidencias (
         FOREIGN KEY (id_alerta) REFERENCES Alertas(id_alerta)
         ON UPDATE CASCADE ON DELETE CASCADE
 ) ENGINE=InnoDB;
+
+-- ---------------------------------------------------------------------
+-- 8. TokensBloqueados (Para invalidacion de sesiones JWT)
+-- ---------------------------------------------------------------------
+CREATE TABLE TokensBloqueados (
+    id_token        INT AUTO_INCREMENT PRIMARY KEY,
+    token           VARCHAR(500) NOT NULL UNIQUE,
+    fecha_bloqueo   DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP
+) ENGINE=InnoDB;
+
+CREATE INDEX idx_tokens_bloqueados_token ON TokensBloqueados(token);
 
 -- =====================================================================
 -- Fin del script (version demo: 4 tablas en MySQL + 2 colecciones Mongo)
