@@ -7,8 +7,8 @@ from app.modules.mati.services.mysql.mysql import engine, Base
 from app.modules.mati.services.Mongo.mongo import client, crear_indices_mongo
 
 # Importamos tu nuevo archivo de rutas
-from routes import Alertas, mongo_test
-#from routes import evidencias
+from app.modules.mati.routes import Alertas, mongo_test
+#from app.modules.mati.routes import evidencias
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):

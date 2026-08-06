@@ -13,8 +13,8 @@ from app.modules.mati.services.mysql.mysql import get_db
 from app.modules.mati.schemas.alerta import AlertaCreate, AlertaResponse, AlertaUpdate, AlertaPanicoCreate, AlertaCancelar
 #Esto es para traer nuestros controladores y llamarlos cuando se realice una peticion y decimos todo lo que esta aqui
 #refiere a el como alerta_controller
-from controllers import alerta as alerta_controller
-#from controllers.Alertas import buscar_alerta
+from app.modules.mati.controllers import alerta as alerta_controller
+#from app.modules.mati.controllers.Alertas import buscar_alerta
 from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.ext.asyncio import AsyncSession
 from typing import List

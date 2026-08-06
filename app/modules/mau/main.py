@@ -2,8 +2,8 @@ from fastapi import FastAPI
 from contextlib import asynccontextmanager
 from sqlmodel import SQLModel
 from app.modules.mau.database import motor
-from routes import auth_routes, user_routes
-from routes import contactosEmergencia_routes
+from app.modules.mau.routes import auth_routes, user_routes
+from app.modules.mau.routes import contactosEmergencia_routes
 
 # Configuramos el ciclo de vida de la app para crear las tablas de la BD al iniciar
 @asynccontextmanager
