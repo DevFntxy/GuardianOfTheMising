@@ -3,7 +3,7 @@ from datetime import datetime, timezone, timedelta
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.future import select
 from app.database.models import Alerta, Usuario
-from app.modules.mati.schemas.alerta import AlertaCreate, AlertaUpdate, AlertaPanicoCreate
+from app.modules.mati.schemas.alerta import AlertaCreate, AlertaUpdate, AlertaPanicoCreate, AlertaCancelar
 from app.modules.mati.services.security import verificar_pin
 
 # CREAR
