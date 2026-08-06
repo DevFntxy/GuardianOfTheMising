@@ -5,7 +5,7 @@ from datetime import datetime, timedelta, timezone
 from dotenv import load_dotenv, find_dotenv
 from fastapi import Depends, HTTPException, status
 from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
-from models.models import TokenBloqueado
+from app.database.models import TokenBloqueado
 from sqlmodel import Session, select
 from database import obtener_sesion
 

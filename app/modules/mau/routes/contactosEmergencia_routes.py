@@ -2,7 +2,7 @@ from fastapi import APIRouter, Depends, HTTPException, status
 from sqlmodel import Session, select
 from database import obtener_sesion
 from security import obtener_usuario_actual
-from models.models import (
+from app.database.models import (
     ContactoEmergencia,
     ContactoEmergenciaCreate,
     ContactoEmergenciaUpdate,

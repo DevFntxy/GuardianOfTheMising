@@ -1,7 +1,7 @@
 from fastapi import APIRouter, Depends, HTTPException, status
 from sqlmodel import Session, select
 from database import obtener_sesion
-from models.models import Usuario, UsuarioUpdate, UsuarioResponse
+from app.database.models import Usuario, UsuarioUpdate, UsuarioResponse
 from security import obtener_usuario_actual, obtener_hash_contrasena
 
 router = APIRouter(prefix="/usuarios", tags=["Gestión de Usuarios"])

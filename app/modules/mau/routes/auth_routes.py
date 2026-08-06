@@ -6,7 +6,7 @@ import jwt
 
 # Importaciones directas
 from database import obtener_sesion
-from models.models import Usuario, UsuarioCreate, UsuarioResponse, LoginRequest, TokenResponse, TokenBloqueado
+from app.database.models import Usuario, UsuarioCreate, UsuarioResponse, LoginRequest, TokenResponse, TokenBloqueado
 from security import (
     obtener_hash_contrasena, 
     verificar_contrasena, 

@@ -4,7 +4,7 @@ from typing import Dict, Any
 from datetime import datetime, timedelta, timezone
 from database import obtener_sesion
 from security import obtener_usuario_actual
-from models import Alerta, EstadoAlerta, Usuario
+from app.database.models import Alerta, EstadoAlerta, Usuario
 
 # Suponiendo que tienes tus dependencias configuradas en otros módulos:
 # from database import get_session
