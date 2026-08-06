@@ -37,6 +37,8 @@ CREATE TABLE Usuarios (
     telefono            VARCHAR(20) NULL,
     fecha_nacimiento    DATE NULL,
     tipo_sangre         ENUM('A+','A-','B+','B-','AB+','AB-','O+','O-') NULL,
+    pin_cancelacion     VARCHAR(255) NULL,
+    max_intentos_pin    INT NULL DEFAULT 3,
     id_rol              INT NOT NULL,
     activo              TINYINT(1) NOT NULL DEFAULT 1,
     fecha_registro      DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,

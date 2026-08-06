@@ -3,7 +3,7 @@ from datetime import datetime
 from typing import Optional, Literal
 
 # Tipos definidos con Literal para validar los valores exactos del Enum de MySQL
-RiesgoEnum = Literal['alto', 'medio', 'bajo']
+RiesgoEnum = Literal['alta', 'media', 'baja']
 EstadoEnum = Literal['activa', 'atendida', 'cancelada', 'falsa_alarma']
 
 # 1. Base: Campos comunes
@@ -12,13 +12,13 @@ class AlertaBase(BaseModel):
     longitud: float
     comentario: Optional[str] = None
     id_geocerca_mongo: Optional[str] = Field(default="Geo-01", examples=["Geo-01"])
-    riesgo: Optional[RiesgoEnum] = "alto"
+    nivel_riesgo: Optional[RiesgoEnum] = "alta"
 
 
 # 2. Para CREAR (POST)
 class AlertaCreate(AlertaBase):
     id_usuario: int
-    id_dispositivo: int  # Obligatorio por el nullable=False de tu modelo
+    id_dispositivo: Optional[int] = None
     estado: Optional[EstadoEnum] = "activa"
 
 
@@ -26,7 +26,7 @@ class AlertaCreate(AlertaBase):
 class AlertaUpdate(BaseModel):
     latitud: Optional[float] = None
     longitud: Optional[float] = None
-    riesgo: Optional[RiesgoEnum] = None
+    nivel_riesgo: Optional[RiesgoEnum] = None
     estado: Optional[EstadoEnum] = None
     comentario: Optional[str] = None
 

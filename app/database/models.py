@@ -57,6 +57,8 @@ class Usuario(SQLModel, table=True):
     telefono: Optional[str] = Field(default=None, max_length=20)
     fecha_nacimiento: Optional[date] = Field(default=None)
     tipo_sangre: Optional[TipoSangre] = Field(default=None)
+    pin_cancelacion: Optional[str] = Field(default=None, max_length=255)
+    max_intentos_pin: Optional[int] = Field(default=3)
     
     id_rol: int = Field(default=2, foreign_key="Roles.id_rol", nullable=False) # 2 = Usuario
     activo: bool = Field(default=True, nullable=False)

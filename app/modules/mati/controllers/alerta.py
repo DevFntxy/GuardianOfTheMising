@@ -2,8 +2,7 @@ from fastapi import HTTPException, status
 from datetime import datetime, timezone, timedelta
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.future import select
-from models.alerta import Alerta
-from models.usuario import Usuario
+from app.database.models import Alerta, Usuario
 from schemas.alerta import AlertaCreate, AlertaUpdate, AlertaPanicoCreate
 from services.security import verificar_pin
 
@@ -58,7 +57,7 @@ async def crear_alerta_panico(db: AsyncSession, datos: AlertaPanicoCreate):
         latitud=datos.latitud,
         longitud=datos.longitud,
         id_geocerca_mongo=datos.id_geocerca_mongo,
-        riesgo="alto",                   # Fijo por ser botón de pánico
+        nivel_riesgo="alta",             # Fijo por ser botón de pánico
         estado="activa",                 # Estado predeterminado
         comentario="Boton de panico"     # Comentario automático
     )
@@ -145,7 +144,7 @@ async def cancelar_alerta_con_pin(db: AsyncSession, datos: AlertaCancelar):
                 id_dispositivo=alerta_activa.id_dispositivo,
                 latitud=alerta_activa.latitud,
                 longitud=alerta_activa.longitud,
-                riesgo="alto",
+                nivel_riesgo="alta",
                 estado="activa",
                 comentario=f"ALERTA DE SEGURIDAD: Forzamiento de PIN ({max_permitidos} intentos fallidos al intentar cancelar alerta #{alerta_activa.id_alerta})",
                 id_geocerca_mongo=alerta_activa.id_geocerca_mongo
