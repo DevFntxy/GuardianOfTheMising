@@ -8,6 +8,11 @@ from app.config.mongo_config import (
 )
 from app.modules.sesni.routes.ubicacion_routes import router as ubicacion_router
 from app.modules.sesni.routes.geocerca_routes import router as geocerca_router
+from app.modules.mau.routes.auth_routes import router as auth_router
+from app.modules.mau.routes.user_routes import router as user_router
+from app.modules.mau.routes.contactosEmergencia_routes import router as contactos_router
+from app.modules.mati.routes.Alertas import router as alertas_router
+from app.modules.mati.routes.mongo_test import router as mongo_test_router
 
 app = FastAPI(
     title="GuardianOfTheMising API",
@@ -44,3 +49,8 @@ async def shutdown():
 
 app.include_router(ubicacion_router)
 app.include_router(geocerca_router)
+app.include_router(auth_router)
+app.include_router(user_router)
+app.include_router(contactos_router)
+app.include_router(alertas_router)
+app.include_router(mongo_test_router)
