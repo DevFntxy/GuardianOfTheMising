@@ -1,4 +1,4 @@
-import { UserService } from './userService';
+﻿import { UserService } from './userService';
 
 export interface Alert {
     number: number;
@@ -9,27 +9,25 @@ export interface Alert {
     state: string;
 }
 
-const usuarios = UserService.getUsuarios();
+const mockUbication = { lat: 10, long: 8 };
+const nombre1 = 'DiegoMiguel04';
+const nombre2 = 'DiegoM22';
+const nombre3 = 'DiegoMC_77';
 
 // Datos estáticos de prueba.
-// TODO: cuando exista backend real, reemplazar por una llamada fetch/axios a la API,
-// manteniendo la misma firma para no tener que tocar los componentes.
+// TODO: cuando exista backend real, reemplazar por una llamada fetch/axios a la API
 const alertas: Alert[] = [
-    { number: 0, username: usuarios[0].username, type: 'Reporte', date: new Date('2026-07-22'), lastUbication: usuarios[0].lastUbication, state: 'Atendida' },
-    { number: 1, username: usuarios[0].username, type: 'Emergencia', date: new Date('2026-07-21'), lastUbication: usuarios[0].lastUbication, state: 'Atendida' },
-    { number: 2, username: usuarios[1].username, type: 'Reporte', date: new Date('2026-07-24'), lastUbication: usuarios[0].lastUbication, state: 'Pendiente' },
-    { number: 3, username: usuarios[1].username, type: 'Reporte', date: new Date('2026-07-25'), lastUbication: usuarios[0].lastUbication, state: 'Pendiente' },
-    { number: 4, username: usuarios[2].username, type: 'Reporte', date: new Date('2026-07-22'), lastUbication: usuarios[0].lastUbication, state: 'Pendiente' },
-    { number: 5, username: usuarios[2].username, type: 'Reporte', date: new Date('2026-07-23'), lastUbication: usuarios[0].lastUbication, state: 'Atendida' },
-    { number: 6, username: usuarios[1].username, type: 'Reporte', date: new Date('2026-07-23'), lastUbication: usuarios[0].lastUbication, state: 'Pendiente' },
-    { number: 7, username: usuarios[2].username, type: 'Emergencia', date: new Date('2026-07-22'), lastUbication: usuarios[0].lastUbication, state: 'Pendiente' },
-    { number: 8, username: usuarios[0].username, type: 'Reporte', date: new Date('2026-07-21'), lastUbication: usuarios[0].lastUbication, state: 'Pendiente' },
-    { number: 9, username: usuarios[1].username, type: 'Reporte', date: new Date('2026-07-20'), lastUbication: usuarios[0].lastUbication, state: 'Pendiente' },
-    { number: 10, username: usuarios[0].username, type: 'Emergencia', date: new Date('2026-07-19'), lastUbication: usuarios[0].lastUbication, state: 'Pendiente' },
-
-    // TODO: cuando agregues los usuarios con id 3, 4, 5, 6 a tu userService,
-    // puedes agregar más alertas aquí usando usuarios[3], usuarios[4], etc.
-    // (en Angular estas alertas usaban user()[3], user()[4], user()[5], user()[6])
+    { number: 0, username: nombre1, type: 'Reporte', date: new Date('2026-07-22'), lastUbication: mockUbication, state: 'Atendida' },
+    { number: 1, username: nombre1, type: 'Emergencia', date: new Date('2026-07-21'), lastUbication: mockUbication, state: 'Atendida' },
+    { number: 2, username: nombre2, type: 'Reporte', date: new Date('2026-07-24'), lastUbication: mockUbication, state: 'Pendiente' },
+    { number: 3, username: nombre2, type: 'Reporte', date: new Date('2026-07-25'), lastUbication: mockUbication, state: 'Pendiente' },
+    { number: 4, username: nombre3, type: 'Reporte', date: new Date('2026-07-22'), lastUbication: mockUbication, state: 'Pendiente' },
+    { number: 5, username: nombre3, type: 'Reporte', date: new Date('2026-07-23'), lastUbication: mockUbication, state: 'Atendida' },
+    { number: 6, username: nombre2, type: 'Reporte', date: new Date('2026-07-23'), lastUbication: mockUbication, state: 'Pendiente' },
+    { number: 7, username: nombre3, type: 'Emergencia', date: new Date('2026-07-22'), lastUbication: mockUbication, state: 'Pendiente' },
+    { number: 8, username: nombre1, type: 'Reporte', date: new Date('2026-07-21'), lastUbication: mockUbication, state: 'Pendiente' },
+    { number: 9, username: nombre2, type: 'Reporte', date: new Date('2026-07-20'), lastUbication: mockUbication, state: 'Pendiente' },
+    { number: 10, username: nombre1, type: 'Emergencia', date: new Date('2026-07-19'), lastUbication: mockUbication, state: 'Pendiente' },
 ];
 
 export const AlertsService = {

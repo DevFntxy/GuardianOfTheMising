@@ -38,12 +38,13 @@ from app.modules.sesni.schemas.geocerca_schema import (
 router = APIRouter(prefix="/geocercas", tags=["Spatial Analytics"])
 
 
+from app.modules.mau.security import obtener_usuario_actual
+
 # ---------------------------------------------------------------------------
 # Dependencias placeholder — sustituir por las reales del proyecto
 # ---------------------------------------------------------------------------
-async def verify_token() -> dict:
-    """Placeholder de validación JWT (Módulo IAM)."""
-    return {"sub": "placeholder-user"}
+async def verify_token(usuario: dict = Depends(obtener_usuario_actual)) -> dict:
+    return {"sub": str(usuario["id_usuario"])}
 
 
 # ---------------------------------------------------------------------------

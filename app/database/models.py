@@ -56,7 +56,7 @@ class Usuario(SQLModel, table=True):
     contrasena_hash: str = Field(max_length=255, nullable=False)
     telefono: Optional[str] = Field(default=None, max_length=20)
     fecha_nacimiento: Optional[date] = Field(default=None)
-    tipo_sangre: Optional[TipoSangre] = Field(default=None)
+    tipo_sangre: Optional[str] = Field(default=None)
     pin_cancelacion: Optional[str] = Field(default=None, max_length=255)
     max_intentos_pin: Optional[int] = Field(default=3)
     

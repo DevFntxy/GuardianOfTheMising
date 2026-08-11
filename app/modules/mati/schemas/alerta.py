@@ -46,7 +46,7 @@ class AlertaResponse(AlertaBase):
 # Esquema exclusivo para la entrada del Botón de Pánico
 class AlertaPanicoCreate(BaseModel):
     id_usuario: int
-    id_dispositivo: int
+    id_dispositivo: Optional[int] = None
     latitud: float
     longitud: float
     id_geocerca_mongo: Optional[str] = Field(default="Geo-01", examples=["Geo-01"])

@@ -88,25 +88,25 @@ export default function Main() {
         { value: 90 }, { value: 70 },
     ];
 
-    // DISPOSITIVOS: reemplazar por lectura real de dispositivos vinculados (Bluetooth).
-    // En Android esto requiere react-native-ble-plx (o módulo nativo) + permiso BLUETOOTH_CONNECT,
-    // y no funciona en Expo Go: se necesita un development build.
-    const dispositivos = [
-        { id: '1', nombre: 'Galaxy Watch 5', icono: '⌚' },
-        // { id: '2', nombre: 'Redmi Note 13 Pro', icono: '📱' },
-        // { id: '3', nombre: 'ASUS ROG Strix G17', icono: '💻' },
-    ];
+    const dispositivos: any[] = [];
 
     return (
         <SafeAreaView className="flex-1 bg-mint-50">
-            {/* Header */}
-            <View className="px-5 pt-4 pb-3">
-                <Text className="text-xl font-bold text-slate-900">Guardian Of The Missing</Text>
-            </View>
-            {/* Content */}
             <ScrollView className="flex-1" contentContainerStyle={{ paddingBottom: 100 }} showsVerticalScrollIndicator={false}>
-                {/* Contenedor del boton de panico */}
-                <View className="mx-4 mt-4 p-4 bg-white rounded-2xl overflow-hidden shadow-sm">
+                <View className="px-5 pt-4 pb-3 flex-row justify-between items-center bg-white">
+                    <Text className="text-xl font-bold text-slate-900">GuardianOfTheMising</Text>
+                    <View className="flex-row">
+                        <TouchableOpacity onPress={() => setShowGraphs(!showGraphs)} className="bg-mint-100 p-2 rounded-full mr-2">
+                            <Text className="text-mint-700 text-xs font-bold">Gráficas {showGraphs ? '▲' : '▼'}</Text>
+                        </TouchableOpacity>
+                        <TouchableOpacity onPress={() => setShowAlerts(!showAlerts)} className="bg-red-100 p-2 rounded-full">
+                            <Text className="text-red-700 text-xs font-bold">Alertas {showAlerts ? '▲' : '▼'}</Text>
+                        </TouchableOpacity>
+                    </View>
+                </View>
+
+                {/* Contenedor de Botón de Pánico (Alertas principales) */}
+                <View className="mx-4 mt-6 p-4 bg-white rounded-2xl overflow-hidden shadow-sm">
                     <TouchableOpacity onPress={activarBotonPanico}
                         className="bg-red-800 w-full h-80 px-10 rounded-2xl overflow-hidden shadow-sm flex items-center justify-center"
                     >
@@ -121,6 +121,7 @@ export default function Main() {
                         <Text className="text-white text-justify">Al presionar este boton, estas enviando un reporte de aviso de seguridad en la zona.</Text>
                     </TouchableOpacity>
                 </View>
+
                 {/* Contenedor de mis dispositivos */}
                 <View className="mx-4 mt-4 bg-white rounded-2xl overflow-hidden shadow-sm">
                     <TouchableOpacity onPress={() => setShowDevices(!showDevices)} className="flex-row items-center justify-between px-4 py-4">
@@ -130,7 +131,7 @@ export default function Main() {
                     {showDevices && (
                         <View className="px-4 pb-4">
                             {dispositivos.length === 0 && (
-                                <Text className="text-slate-700 text-sm">No hay dispositivos vinculados.</Text>
+                                <Text className="text-slate-700 text-sm mb-4">No hay dispositivos vinculados.</Text>
                             )}
                             {dispositivos.map((dispositivo) => (
                                 <View key={dispositivo.id} className="flex-row items-center bg-mint-700 rounded-xl px-4 py-3 mb-3">
@@ -138,9 +139,13 @@ export default function Main() {
                                     <Text className="text-white font-semibold text-sm">{dispositivo.nombre}</Text>
                                 </View>
                             ))}
+                            <TouchableOpacity className="bg-mint-100 border border-mint-300 rounded-xl py-3 items-center" onPress={() => Alert.alert('Próximamente', 'Búsqueda de dispositivos Bluetooth en desarrollo.')}>
+                                <Text className="text-mint-800 font-bold text-sm">+ Vincular nuevo dispositivo</Text>
+                            </TouchableOpacity>
                         </View>
                     )}
                 </View>
+
                 {/* Contenedor de gráficas */}
                 <View className="mx-4 mt-4 bg-white rounded-2xl overflow-hidden shadow-sm">
                     <TouchableOpacity onPress={() => setShowGraphs(!showGraphs)} className="flex-row items-center justify-between px-4 py-4">

@@ -1,107 +1,61 @@
 import { useEffect, useRef } from 'react';
 import { Alert, Platform } from 'react-native';
-import * as Notifications from 'expo-notifications';
 import { Accelerometer } from 'expo-sensors';
-
-// Controla cómo se muestra la notificación mientras la app está en primer plano.
-Notifications.setNotificationHandler({
-    handleNotification: async () => ({
-        shouldShowBanner: true,
-        shouldShowList: true,
-        shouldPlaySound: true,
-        shouldSetBadge: false,
-    }),
-});
-
-/**
- * Pide (si hace falta) el permiso de notificaciones.
- * Devuelve true si quedó concedido, false si el usuario lo negó.
- */
-const asegurarPermisoNotificaciones = async (): Promise<boolean> => {
-    const { status: statusActual } = await Notifications.getPermissionsAsync();
-    let status = statusActual;
-
-    if (status !== 'granted') {
-        const { status: nuevoStatus } = await Notifications.requestPermissionsAsync();
-        status = nuevoStatus;
-    }
-
-    if (status !== 'granted') {
-        Alert.alert(
-            'Permiso necesario',
-            'Activa las notificaciones para recibir la confirmación de este reporte.'
-        );
-        return false;
-    }
-
-    return true;
-};
-
-/**
- * Envía el reporte de emergencia (notificación nativa local).
- * TODO: aquí se enviaría también el reporte real al backend / AlertsService.
- */
 import { apiFetch } from './api';
+
+import { UserService } from './userService';
 
 export const activarBotonPanico = async () => {
     try {
+        const usuarioActual = UserService.getUsuarioActual();
+        if (!usuarioActual) {
+            Alert.alert('Error', 'Debes iniciar sesión para usar el botón de pánico.');
+            return;
+        }
+
         await apiFetch('/alertas/panico', {
             method: 'POST',
             body: JSON.stringify({
-                id_usuario: 1, // esto debe venir del contexto real
-                id_dispositivo: 'dispositivo-1',
+                id_usuario: usuarioActual.id, 
+                id_dispositivo: null, // null porque la alerta se disparó desde la app del teléfono, no desde un wearable
                 latitud: 10,
                 longitud: 9,
                 id_geocerca_mongo: 'zona-segura'
             })
         });
-    } catch (e) { console.error('Error enviando panico', e); }
-    const permisoConcedido = await asegurarPermisoNotificaciones();
-    if (!permisoConcedido) return;
-
-    // En Android es obligatorio un canal para que la notificación suene/vibre.
-    if (Platform.OS === 'android') {
-        await Notifications.setNotificationChannelAsync('panico', {
-            name: 'Alertas de pánico',
-            importance: Notifications.AndroidImportance.MAX,
-            vibrationPattern: [0, 250, 250, 250],
-        });
+        Alert.alert('Reporte de emergencia enviado', 'Tu equipo y tus contactos han sido notificados en tiempo real.');
+    } catch (e: any) { 
+        Alert.alert('Error', e.message || 'No se pudo enviar la alerta de pánico');
+        console.error('Error enviando panico', e); 
     }
-
-    await Notifications.scheduleNotificationAsync({
-        content: {
-            title: 'Reporte de emergencia enviado',
-            body: 'Tu equipo y tus contactos de confianza han sido notificados en tiempo real.',
-            sound: true,
-        },
-        trigger: null, // null = disparo inmediato
-    });
 };
 
-/**
- * Envía un reporte de aviso de seguridad en la zona (notificación nativa local).
- * TODO: aquí se enviaría también el reporte real al backend / AlertsService.
- */
 export const enviarAlertaSeguridad = async () => {
-    const permisoConcedido = await asegurarPermisoNotificaciones();
-    if (!permisoConcedido) return;
+    try {
+        const usuarioActual = UserService.getUsuarioActual();
+        if (!usuarioActual) {
+            Alert.alert('Error', 'Debes iniciar sesión para enviar un reporte.');
+            return;
+        }
 
-    if (Platform.OS === 'android') {
-        await Notifications.setNotificationChannelAsync('seguridad', {
-            name: 'Alertas de seguridad',
-            importance: Notifications.AndroidImportance.HIGH,
-            vibrationPattern: [0, 150, 150, 150],
+        await apiFetch('/alertas/', {
+            method: 'POST',
+            body: JSON.stringify({
+                id_usuario: usuarioActual.id, 
+                id_dispositivo: null,
+                latitud: 10,
+                longitud: 9,
+                id_geocerca_mongo: 'zona-segura',
+                nivel_riesgo: 'media',
+                estado: 'activa',
+                comentario: 'Reporte de seguridad manual'
+            })
         });
+        Alert.alert('Reporte de seguridad enviado', 'Has notificado un aviso de seguridad en tu zona a otros usuarios cercanos.');
+    } catch (e: any) {
+        Alert.alert('Error', e.message || 'No se pudo enviar el reporte de seguridad');
+        console.error('Error enviando reporte de seguridad', e);
     }
-
-    await Notifications.scheduleNotificationAsync({
-        content: {
-            title: 'Reporte de seguridad enviado',
-            body: 'Has notificado un aviso de seguridad en tu zona a otros usuarios cercanos.',
-            sound: true,
-        },
-        trigger: null,
-    });
 };
 
 // --- Detección de shake ---
@@ -110,11 +64,6 @@ const UMBRAL_ACELERACION = 1.8; // fuerza mínima (en g) para considerarlo un "a
 const INTERVALO_LECTURA_MS = 100;
 const COOLDOWN_MS = 3000; // evita disparos repetidos por un solo shake sostenido
 
-/**
- * Hook que activa el botón de pánico automáticamente al detectar que el usuario
- * agita el dispositivo. Solo funciona mientras el componente que lo usa está montado
- * (app abierta en primer plano o background reciente); no funciona con la app cerrada.
- */
 export function useShakeParaPanico(activo: boolean = true) {
     const ultimoDisparo = useRef(0);
 
@@ -140,4 +89,3 @@ export function useShakeParaPanico(activo: boolean = true) {
         };
     }, [activo]);
 }
-

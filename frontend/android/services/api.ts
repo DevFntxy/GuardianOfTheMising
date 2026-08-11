@@ -1,6 +1,6 @@
 import * as SecureStore from 'expo-secure-store';
 
-const API_URL = process.env.EXPO_PUBLIC_API_URL || 'http://172.16.0.173:8000';
+const API_URL = process.env.EXPO_PUBLIC_API_URL || 'http://192.168.1.71:8000';
 
 export const setAuthToken = async (token: string) => {
     await SecureStore.setItemAsync('access_token', token);
@@ -22,19 +22,32 @@ export const apiFetch = async (endpoint: string, options: RequestInit = {}) => {
     };
 
     if (token) {
-        headers['Authorization'] = "Bearer ${token}";
+        headers['Authorization'] = `Bearer ${token}`;
     }
 
-    const response = await fetch("${API_URL}", {
-        ...options,
-        headers,
-    });
+    let response;
+    try {
+        response = await fetch(`${API_URL}${endpoint}`, {
+            ...options,
+            headers,
+        });
+    } catch (e: any) {
+        throw new Error(`[Red] ${e.message}. Revisa que tu celular y PC estén en el mismo Wi-Fi y no en datos móviles.`);
+    }
 
     if (!response.ok) {
-        let errorMessage = "HTTP error! status: ${response.status}";
+        let errorMessage = `HTTP error! status: ${response.status}`;
         try {
             const errorData = await response.json();
-            errorMessage = errorData.detail || errorMessage;
+            if (errorData.detail) {
+                if (typeof errorData.detail === 'string') {
+                    errorMessage = errorData.detail;
+                } else if (Array.isArray(errorData.detail)) {
+                    errorMessage = errorData.detail.map((e: any) => e.msg).join(', ');
+                } else {
+                    errorMessage = JSON.stringify(errorData.detail);
+                }
+            }
         } catch (e) {}
         throw new Error(errorMessage);
     }

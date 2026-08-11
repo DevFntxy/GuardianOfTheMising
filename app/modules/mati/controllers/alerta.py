@@ -2,7 +2,7 @@ from fastapi import HTTPException, status
 from datetime import datetime, timezone, timedelta
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.future import select
-from app.database.models import Alerta, Usuario
+from app.database.models import Alerta, Usuario, NivelRiesgo, EstadoAlerta
 from app.modules.mati.schemas.alerta import AlertaCreate, AlertaUpdate, AlertaPanicoCreate, AlertaCancelar
 from app.modules.mati.services.security import verificar_pin
 
@@ -57,8 +57,8 @@ async def crear_alerta_panico(db: AsyncSession, datos: AlertaPanicoCreate):
         latitud=datos.latitud,
         longitud=datos.longitud,
         id_geocerca_mongo=datos.id_geocerca_mongo,
-        nivel_riesgo="alta",             # Fijo por ser botón de pánico
-        estado="activa",                 # Estado predeterminado
+        nivel_riesgo=NivelRiesgo.alta,             # Fijo por ser botón de pánico
+        estado=EstadoAlerta.activa,                 # Estado predeterminado
         comentario="Boton de panico"     # Comentario automático
     )
     

@@ -23,13 +23,13 @@ export default function Login() {
     const [errorRPassword, setErrorRPassword] = useState('');
     const [errorRPasswordConfirm, setErrorRPasswordConfirm] = useState('');
 
-    // --- Completar perfil (teléfono + tipo de sangre) ---
+    // --- Completar perfil (telÃ©fono + tipo de sangre) ---
     const [rPhone, setRPhone] = useState('');
     const [rBloodType, setRBloodType] = useState('');
     const [errorRPhone, setErrorRPhone] = useState('');
     const [errorRBloodType, setErrorRBloodType] = useState('');
 
-    // --- Recuperación ---
+    // --- RecuperaciÃ³n ---
     const [recoveryEmail, setRecoveryEmail] = useState('');
     const [errorRecoveryEmail, setErrorRecoveryEmail] = useState('');
 
@@ -85,123 +85,70 @@ export default function Login() {
         setPantalla('recovery');
     };
 
-    // --- Lógica de login ---
+    // --- LÃ³gica de login ---
     const validarLogin = (): boolean => {
-        let esValido = true;
-        setErrorEmail('');
-        setErrorPassword('');
-
-        if (!email.trim()) {
-            setErrorEmail('El correo es obligatorio.'); esValido = false;
-        } else if (!formatoEmailValido(email)) {
-            setErrorEmail('El formato del correo no es válido.'); esValido = false;
-        } else {
-            const usuarioEncontrado = UserService.buscarPorEmail(email);
-
-            if (!usuarioEncontrado) {
-                setErrorEmail('No existe una cuenta con este correo.'); esValido = false;
-            } else {
-                if (!password.trim()) {
-                    setErrorPassword('La contraseña es obligatoria.'); esValido = false;
-                } else if (password !== usuarioEncontrado.password) {
-                    setErrorPassword('Contraseña incorrecta.'); esValido = false;
-                }
-            }
-        }
-
-        return esValido;
+        return true;
     };
 
-    const onLoginSuccess = () => {
+    const onLoginSuccess = async () => {
         if (!validarLogin()) { return; }
-        const usuario = UserService.buscarPorEmail(email);
-        if (usuario) { UserService.iniciarSesion(usuario.id); }
-        router.push('/main');
+        try {
+            await UserService.apiLogin(email.trim(), password);
+            router.push('/main');
+        } catch (e: any) {
+            setErrorPassword(e.message || 'Credenciales incorrectas');
+        }
     };
 
-    // --- Lógica de registro (paso 1: cuenta) ---
     const validarRegistro = (): boolean => {
-        let esValido = true;
-        setErrorREmail('');
-        setErrorRPassword('');
-        setErrorRPasswordConfirm('');
-
-        if (!rEmail.trim()) {
-            setErrorREmail('El correo es obligatorio.'); esValido = false;
-        } else if (!formatoEmailValido(rEmail)) {
-            setErrorREmail('El formato del correo no es válido.'); esValido = false;
-        } else if (UserService.existeEmail(rEmail)) {
-            setErrorREmail('El correo ingresado ya pertenece a una cuenta existente.'); esValido = false;
-        }
-
-        if (!rPassword.trim()) {
-            setErrorRPassword('La contraseña es obligatoria.'); esValido = false;
-        } else {
-            const tieneLongitudMinima = rPassword.length >= 8;
-            const tieneNumero = /\d/.test(rPassword);
-            const tieneSimbolo = /[^A-Za-z0-9]/.test(rPassword);
-
-            if (!tieneLongitudMinima) {
-                setErrorRPassword('La contraseña debe tener al menos 8 caracteres.'); esValido = false;
-            } else if (!tieneNumero) {
-                setErrorRPassword('La contraseña debe contener al menos un número.'); esValido = false;
-            } else if (!tieneSimbolo) {
-                setErrorRPassword('La contraseña debe contener al menos un símbolo.'); esValido = false;
-            }
-        }
-
-        if (!rPasswordConfirm.trim()) {
-            setErrorRPasswordConfirm('Debes confirmar la contraseña.'); esValido = false;
-        } else if (rPasswordConfirm !== rPassword) {
-            setErrorRPasswordConfirm('Las contraseñas no coinciden.'); esValido = false;
-        }
-
-        return esValido;
+        return true;
     };
 
     const onRegisterSuccess = () => {
         if (!validarRegistro()) {
             return;
         }
-        // Aquí se enviaría el registro real a backend (paso 1: correo + contraseña)
+        // AquÃ­ se enviarÃ­a el registro real a backend (paso 1: correo + contraseÃ±a)
         limpiarCamposCompleteProfile();
         setPantalla('completeProfile');
     };
 
-    // --- Lógica de completar perfil (paso 2: teléfono + tipo de sangre) ---
     const validarCompleteProfile = (): boolean => {
-        let esValido = true;
-        setErrorRPhone('');
-        setErrorRBloodType('');
-
-        if (!rPhone.trim()) {
-            setErrorRPhone('El número de teléfono es obligatorio.'); esValido = false;
-        } else if (!/^\d{10}$/.test(rPhone.trim())) {
-            setErrorRPhone('Ingresa un número de teléfono válido de 10 dígitos.'); esValido = false; 
-        }
-
-        if (!rBloodType.trim()) { setErrorRBloodType('El tipo de sangre es obligatorio.'); esValido = false; }
-        return esValido;
+        return true;
     };
 
-    const onCompleteProfileSuccess = () => {
+    const onCompleteProfileSuccess = async () => {
         if (!validarCompleteProfile()) { return; }
-        // Aquí se enviaría el registro completo real a backend (correo, contraseña, teléfono, tipo de sangre)
-        setPantalla('registerSuccess');
+        try {
+            const dataPayload: any = {
+                nombre: rEmail.split('@')[0] || 'Usuario',
+                apellido_paterno: 'Usuario',
+                correo: rEmail.trim(),
+                contrasena: rPassword
+            };
+            if (rPhone.trim()) dataPayload.telefono = rPhone.trim();
+            if (rBloodType.trim()) dataPayload.tipo_sangre = rBloodType.trim().toUpperCase();
+            dataPayload.fecha_nacimiento = '2000-01-01';
+
+            await UserService.apiRegister(dataPayload);
+            setPantalla('registerSuccess');
+        } catch (e: any) {
+            setErrorRPhone(e.message || 'Error al registrar usuario');
+        }
     };
 
-    // --- Lógica de recuperación ---
+    // --- LÃ³gica de recuperaciÃ³n ---
     const validarRecoveryEmail = (): boolean => {
         setErrorRecoveryEmail('');
         if (!recoveryEmail.trim()) { setErrorRecoveryEmail('El correo es obligatorio.'); return false; }
-        if (!formatoEmailValido(recoveryEmail)) { setErrorRecoveryEmail('El formato del correo no es válido.'); return false; }
-        if (!UserService.existeEmail(recoveryEmail)) { setErrorRecoveryEmail('No existe una cuenta con este correo.'); return false; }
+        if (!formatoEmailValido(recoveryEmail)) { setErrorRecoveryEmail('El formato del correo no es vÃ¡lido.'); return false; }
+        // El backend verificará si el correo existe al enviar el código
         return true;
     };
 
     const onEnviarRecovery = () => {
         if (!validarRecoveryEmail()) { return; }
-        // Aquí se enviaría el correo real de recuperación
+        // AquÃ­ se enviarÃ­a el correo real de recuperaciÃ³n
         setPantalla('recoverySuccess');
     };
 
@@ -211,20 +158,20 @@ export default function Login() {
                 {/* --- Formulario de Login --- */}
                 {pantalla === 'login' && (
                     <>
-                        <Text className="text-[26px] font-bold text-slate-900 mb-6">Iniciar sesión</Text>
+                        <Text className="text-[26px] font-bold text-slate-900 mb-6">Iniciar sesiÃ³n</Text>
                         <Text className="text-sm font-semibold text-slate-900 mb-1.5">Correo electronico</Text>
                         {!!errorEmail && <Text className="text-red-600 text-xs mb-2">{errorEmail}</Text>}
                         <TextInput className="bg-mint-100 border border-mint-200 rounded-lg h-11 px-3 mb-1"
                             value={email} onChangeText={setEmail} autoCapitalize="none" keyboardType="email-address" />
-                        <Text className="text-sm font-semibold text-slate-900 mb-1.5 mt-2">Contraseña</Text>
+                        <Text className="text-sm font-semibold text-slate-900 mb-1.5 mt-2">ContraseÃ±a</Text>
                         {!!errorPassword && <Text className="text-red-600 text-xs mb-2">{errorPassword}</Text>}
                         <TextInput className="bg-mint-100 border border-mint-200 rounded-lg h-11 px-3 mb-1"
                             value={password} onChangeText={setPassword} secureTextEntry />
                         <TouchableOpacity onPress={irARecovery} className="mt-1 mb-4">
-                            <Text className="text-mint-800 font-semibold text-[13px]">¿Olvidaste tu contraseña?</Text>
+                            <Text className="text-mint-800 font-semibold text-[13px]">Â¿Olvidaste tu contraseÃ±a?</Text>
                         </TouchableOpacity>
                         <TouchableOpacity className="bg-mint-400 rounded-lg h-[46px] justify-center items-center mb-[18px]" onPress={onLoginSuccess}>
-                            <Text className="text-mint-700 font-bold text-[15px]">Iniciar sesión</Text>
+                            <Text className="text-mint-700 font-bold text-[15px]">Iniciar sesiÃ³n</Text>
                         </TouchableOpacity>
                         <Text className="text-center text-slate-700 mb-4 text-sm">O inicia sesion con</Text>
                         <TouchableOpacity className="bg-mint-600 rounded-lg h-[46px] justify-center items-center mb-3">
@@ -237,9 +184,9 @@ export default function Login() {
                             <Text className="text-mint-700 font-semibold text-sm">Iniciar sesion con Apple</Text>
                         </TouchableOpacity>
                         <View className="flex-row justify-center mt-2">
-                            <Text className="text-slate-900 text-[13px]">¿Aun no tienes una cuenta? </Text>
+                            <Text className="text-slate-900 text-[13px]">Â¿Aun no tienes una cuenta? </Text>
                             <TouchableOpacity onPress={irARegistro}>
-                                <Text className="text-mint-800 font-semibold text-[13px]">¡Registrate!</Text>
+                                <Text className="text-mint-800 font-semibold text-[13px]">Â¡Registrate!</Text>
                             </TouchableOpacity>
                         </View>
                     </>
@@ -253,11 +200,11 @@ export default function Login() {
                         {!!errorREmail && <Text className="text-red-600 text-xs mb-2">{errorREmail}</Text>}
                         <TextInput className="bg-mint-100 border border-mint-200 rounded-lg h-11 px-3 mb-1"
                             value={rEmail} onChangeText={setREmail} autoCapitalize="none" keyboardType="email-address" />
-                        <Text className="text-sm font-semibold text-slate-900 mb-1.5 mt-2">Contraseña</Text>
+                        <Text className="text-sm font-semibold text-slate-900 mb-1.5 mt-2">ContraseÃ±a</Text>
                         {!!errorRPassword && <Text className="text-red-600 text-xs mb-2">{errorRPassword}</Text>}
                         <TextInput className="bg-mint-100 border border-mint-200 rounded-lg h-11 px-3 mb-1"
                             value={rPassword} onChangeText={setRPassword} secureTextEntry />
-                        <Text className="text-sm font-semibold text-slate-900 mb-1.5 mt-2">Confirmar contraseña</Text>
+                        <Text className="text-sm font-semibold text-slate-900 mb-1.5 mt-2">Confirmar contraseÃ±a</Text>
                         {!!errorRPasswordConfirm && <Text className="text-red-600 text-xs mb-2">{errorRPasswordConfirm}</Text>}
                         <TextInput className="bg-mint-100 border border-mint-200 rounded-lg h-11 px-3 mb-1"
                             value={rPasswordConfirm} onChangeText={setRPasswordConfirm} secureTextEntry />
@@ -275,45 +222,54 @@ export default function Login() {
                             <Text className="text-mint-700 font-semibold text-sm">Registrarme con Apple</Text>
                         </TouchableOpacity>
                         <View className="flex-row justify-center mt-2">
-                            <Text className="text-slate-900 text-[13px]">¿Ya tienes una cuenta? </Text>
+                            <Text className="text-slate-900 text-[13px]">Â¿Ya tienes una cuenta? </Text>
                             <TouchableOpacity onPress={irALogin}>
-                                <Text className="text-mint-800 font-semibold text-[13px]">¡Inicia sesión!</Text>
+                                <Text className="text-mint-800 font-semibold text-[13px]">Â¡Inicia sesiÃ³n!</Text>
                             </TouchableOpacity>
                         </View>
                     </>
                 )}
-                {/* --- Formulario de Registro (paso 2: teléfono + tipo de sangre) --- */}
+                {/* --- Formulario de Registro (paso 2: telÃ©fono + tipo de sangre) --- */}
                 {pantalla === 'completeProfile' && (
                     <>
                         <Text className="text-[26px] font-bold text-slate-900 mb-2">Completa tu perfil</Text>
                         <Text className="text-slate-700 text-[13px] mb-6">Estos datos nos ayudan a identificarte en caso de emergencia.</Text>
-                        <Text className="text-sm font-semibold text-slate-900 mb-1.5">Número de teléfono</Text>
+                        <Text className="text-sm font-semibold text-slate-900 mb-1.5">NÃºmero de telÃ©fono</Text>
                         {!!errorRPhone && <Text className="text-red-600 text-xs mb-2">{errorRPhone}</Text>}
                         <TextInput className="bg-mint-100 border border-mint-200 rounded-lg h-11 px-3 mb-1"
                             value={rPhone} onChangeText={setRPhone} keyboardType="phone-pad" maxLength={10} />
-                        <Text className="text-sm font-semibold text-slate-900 mb-1.5 mt-2">Tipo de sangre</Text>
+                        <Text className="text-sm font-semibold text-slate-900 mb-1.5 mt-2">Tipo de sangre (Opcional)</Text>
                         {!!errorRBloodType && <Text className="text-red-600 text-xs mb-2">{errorRBloodType}</Text>}
-                        <TextInput className="bg-mint-100 border border-mint-200 rounded-lg h-11 px-3 mb-1"
-                            value={rBloodType} onChangeText={setRBloodType} autoCapitalize="characters" placeholder="Ej. O+" />
+                        <View className="flex-row flex-wrap justify-between mt-1 mb-2">
+                            {['A+', 'A-', 'B+', 'B-', 'AB+', 'AB-', 'O+', 'O-'].map((tipo) => (
+                                <TouchableOpacity 
+                                    key={tipo} 
+                                    onPress={() => setRBloodType(rBloodType === tipo ? '' : tipo)}
+                                    className={`w-[23%] aspect-[2/1] rounded-lg justify-center items-center mb-2 border ${rBloodType === tipo ? 'bg-mint-700 border-mint-700' : 'bg-mint-100 border-mint-200'}`}
+                                >
+                                    <Text className={`font-bold ${rBloodType === tipo ? 'text-white' : 'text-slate-900'}`}>{tipo}</Text>
+                                </TouchableOpacity>
+                            ))}
+                        </View>
                         <TouchableOpacity className="bg-mint-400 rounded-lg h-[46px] justify-center items-center mt-4" onPress={onCompleteProfileSuccess}>
                             <Text className="text-mint-700 font-bold text-[15px]">Finalizar registro</Text>
                         </TouchableOpacity>
                     </>
                 )}
-                {/* --- Confirmación de registro completado --- */}
+                {/* --- ConfirmaciÃ³n de registro completado --- */}
                 {pantalla === 'registerSuccess' && (
                     <View className="items-center">
                         <Text className="text-[22px] font-bold text-slate-900 mb-4 text-center">Registro completado</Text>
-                        <Text className="text-slate-700 text-center mb-8">Ahora puedes iniciar sesión.</Text>
+                        <Text className="text-slate-700 text-center mb-8">Ahora puedes iniciar sesiÃ³n.</Text>
                         <TouchableOpacity className="bg-mint-400 rounded-lg h-[46px] w-full justify-center items-center" onPress={irALogin}>
-                            <Text className="text-mint-700 font-bold text-[15px]">Iniciar sesión</Text>
+                            <Text className="text-mint-700 font-bold text-[15px]">Iniciar sesiÃ³n</Text>
                         </TouchableOpacity>
                     </View>
                 )}
-                {/* --- Formulario de recuperación (paso 1: correo) --- */}
+                {/* --- Formulario de recuperaciÃ³n (paso 1: correo) --- */}
                 {pantalla === 'recovery' && (
                     <>
-                        <Text className="text-[26px] font-bold text-slate-900 mb-6">Recuperar contraseña</Text>
+                        <Text className="text-[26px] font-bold text-slate-900 mb-6">Recuperar contraseÃ±a</Text>
                         <Text className="text-sm font-semibold text-slate-900 mb-1.5">Correo electronico</Text>
                         <TextInput
                             className="bg-mint-100 border border-mint-200 rounded-lg h-11 px-3 mb-1"
@@ -331,11 +287,11 @@ export default function Login() {
                         </TouchableOpacity>
                     </>
                 )}
-                {/* --- Confirmación de recuperación enviada --- */}
+                {/* --- ConfirmaciÃ³n de recuperaciÃ³n enviada --- */}
                 {pantalla === 'recoverySuccess' && (
                     <View className="items-center">
                         <Text className="text-[22px] font-bold text-slate-900 mb-4 text-center">Correo enviado</Text>
-                        <Text className="text-slate-700 text-center mb-8">Te hemos enviado un correo electronico para que puedas cambiar tu contraseña.</Text>
+                        <Text className="text-slate-700 text-center mb-8">Te hemos enviado un correo electronico para que puedas cambiar tu contraseÃ±a.</Text>
                         <TouchableOpacity className="bg-mint-400 rounded-lg h-[46px] w-full justify-center items-center" onPress={irALogin}>
                             <Text className="text-mint-700 font-bold text-[15px]">Regresar</Text>
                         </TouchableOpacity>
@@ -345,4 +301,5 @@ export default function Login() {
         </View>
     );
 }
+
 

@@ -42,10 +42,12 @@ def actualizar_perfil(
     # exclude_unset=True asegura que solo tomemos los datos que el usuario envió
     datos_dict = datos_actualizar.model_dump(exclude_unset=True)
     
-    # CORRECCIÓN AQUÍ: Si viene la contraseña, la hasheamos y cambiamos el nombre de la llave
     if "contrasena" in datos_dict:
-        password_plana = datos_dict.pop("contrasena") # Extrae y elimina 'contrasena' del diccionario
-        datos_dict["contrasena_hash"] = obtener_hash_contrasena(password_plana) # Crea la nueva llave correcta
+        password_plana = datos_dict.pop("contrasena")
+        datos_dict["contrasena_hash"] = obtener_hash_contrasena(password_plana)
+        
+    if "tipo_sangre" in datos_dict and datos_dict["tipo_sangre"]:
+        datos_dict["tipo_sangre"] = datos_dict["tipo_sangre"].value
         
     # Ahora el diccionario tiene las llaves exactas que coinciden con la BD
     for clave, valor in datos_dict.items():

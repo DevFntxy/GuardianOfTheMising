@@ -43,7 +43,7 @@ def registrar_usuario(usuario_in: UsuarioCreate, sesion: Session = Depends(obten
         correo=usuario_in.correo,
         telefono=usuario_in.telefono,
         fecha_nacimiento=usuario_in.fecha_nacimiento,
-        tipo_sangre=usuario_in.tipo_sangre,
+        tipo_sangre=usuario_in.tipo_sangre.value if usuario_in.tipo_sangre else None,
         contrasena_hash=contrasena_encriptada
     )
     

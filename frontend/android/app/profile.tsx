@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, TouchableOpacity } from 'react-native';
+import { View, Text, TouchableOpacity, Alert } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { router } from 'expo-router';
 import BottomNavBar from './BottomNavBar';
@@ -63,7 +63,7 @@ export default function Profile() {
                     <Text className="text-sm text-slate-700">Tipo de sangre: </Text>
                     <Text className="text-sm font-semibold text-slate-900">{usuarioActual.bloodType}</Text>
                 </View>
-                <TouchableOpacity>
+                <TouchableOpacity onPress={() => Alert.alert('Próximamente', 'La función de cambiar contraseña estará disponible pronto.')}>
                     <Text className="text-sm font-semibold text-mint-800 ml-6 mt-2">Cambiar contraseña</Text>
                 </TouchableOpacity>
                 <TouchableOpacity onPress={cerrarSesion} className="bg-red-800 rounded-full py-3 items-center mt-8">
