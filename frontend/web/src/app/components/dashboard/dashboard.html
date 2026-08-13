@@ -1,4 +1,26 @@
-<div class="flex rounded-xl justify-between h-full mb-5 shadow-[0_0px_30px_0px_rgba(61,166,147,0.4)]">
+<div class="flex rounded-xl justify-between h-full mb-5 shadow-[0_0px_30px_0px_rgba(61,166,147,0.4)] relative">
+
+    <!-- ALERTA EN VIVO UI -->
+    <div *ngIf="activeAlert" class="absolute top-4 left-1/2 -translate-x-1/2 z-50 w-[90%] max-w-2xl bg-red-600 rounded-2xl shadow-2xl overflow-hidden animate-pulse border-4 border-red-800">
+        <div class="p-6 text-white flex flex-col items-center">
+            <h2 class="text-3xl font-black mb-2 uppercase tracking-widest text-center">¡ALERTA DE PÁNICO EN VIVO!</h2>
+            
+            <div class="bg-red-900/50 rounded-xl p-4 w-full mt-4 flex flex-col gap-2">
+                <p class="text-lg"><strong>Nivel de Riesgo:</strong> {{ activeAlert.nivel_riesgo | uppercase }}</p>
+                <p class="text-lg"><strong>Comentario:</strong> {{ activeAlert.comentario }}</p>
+                
+                <div class="mt-4 bg-white/10 p-3 rounded-lg border border-red-400">
+                    <p class="text-sm uppercase font-bold text-red-200 mb-1">Ubicación aproximada (GPS):</p>
+                    <p class="text-xl font-medium leading-tight">{{ alertAddress }}</p>
+                </div>
+            </div>
+
+            <button (click)="closeAlert()" class="mt-6 bg-white text-red-700 px-8 py-3 rounded-xl font-bold text-lg shadow-lg hover:scale-105 transition-all">
+                Cerrar Notificación
+            </button>
+        </div>
+    </div>
+    
     <div class="flex flex-col w-[70%] px-7 py-6 gap-y-5 overflow-y-scroll">
         <h1 class="text-xl font-semibold">Graficas</h1>
         <div class="flex w-full gap-x-5">

@@ -66,6 +66,20 @@ async def crear_alerta_panico(db: AsyncSession, datos: AlertaPanicoCreate):
     await db.commit()
     await db.refresh(nueva_alerta)
     
+    from app.utils.websocket_manager import manager
+    await manager.broadcast_all({
+        "event": "NEW_ALERT",
+        "data": {
+            "id_alerta": nueva_alerta.id_alerta,
+            "id_usuario": nueva_alerta.id_usuario,
+            "latitud": float(nueva_alerta.latitud),
+            "longitud": float(nueva_alerta.longitud),
+            "nivel_riesgo": nueva_alerta.nivel_riesgo,
+            "estado": nueva_alerta.estado,
+            "comentario": nueva_alerta.comentario,
+        }
+    })
+    
     return nueva_alerta
 
 # --- HELPER PRIVADO (Reutilizable) ---

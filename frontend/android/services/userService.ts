@@ -1,4 +1,4 @@
-﻿export interface ContactGroup {
+export interface ContactGroup {
     id: number;
     name: string;
     contactIds: number[];
@@ -103,12 +103,21 @@ export const UserService = {
         return await apiFetch('/geocercas/');
     },
 
-    async apiGuardarGeocerca(puntos: any[]): Promise<any> {
+    async apiGuardarGeocerca(puntoCentral: any, radioMetros: number = 100): Promise<any> {
+        const usuarioActual = this.getUsuarioActual();
+        if (!usuarioActual) throw new Error("Sesión no iniciada");
+
         return await apiFetch('/geocercas/', {
             method: 'POST',
             body: JSON.stringify({
-                tipo: 'riesgo',
-                coordenadas: puntos,
+                id_usuario: usuarioActual.id,
+                nombre: "Zona de Seguridad",
+                tipo_zona: "segura",
+                ubicacion: {
+                    type: "Point",
+                    coordinates: [puntoCentral.longitude, puntoCentral.latitude]
+                },
+                radio_metros: radioMetros,
                 activa: true
             })
         });

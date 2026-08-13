@@ -1,22 +1,60 @@
-import { Component, Output, EventEmitter, computed, inject } from '@angular/core';
-import { NgFor } from '@angular/common';
+import { Component, Output, EventEmitter, computed, inject, OnInit, OnDestroy, ChangeDetectorRef } from '@angular/core';
+import { NgFor, NgIf, UpperCasePipe } from '@angular/common';
 import { BaseChartDirective } from 'ng2-charts';
 import { ChartConfiguration, ChartData } from 'chart.js';
 import { UserService } from '../../services/user';
+import { WebsocketService } from '../../services/websocket.service';
 import { Chart, registerables } from 'chart.js';
+import { Subscription } from 'rxjs';
 Chart.register(...registerables);
 
 @Component({
     selector: 'app-dashboard',
-    imports: [NgFor, BaseChartDirective],
+    imports: [NgFor, NgIf, UpperCasePipe, BaseChartDirective],
     templateUrl: './dashboard.html'
 })
 
-export class DashboardComponent {
+export class DashboardComponent implements OnInit, OnDestroy {
     private users = inject(UserService)
+    private ws = inject(WebsocketService)
+    private cdr = inject(ChangeDetectorRef)
+    private wsSub!: Subscription;
+
     lastUsers = computed(() =>
         this.users.user().slice(-5)
     );
+
+    activeAlert: any = null;
+    alertAddress: string = '';
+
+    ngOnInit() {
+        this.wsSub = this.ws.alerts$.subscribe(async (alertData) => {
+            console.warn('Realtime alert received:', alertData);
+            this.activeAlert = alertData;
+            this.alertAddress = 'Calculando ubicación...';
+            this.cdr.detectChanges(); // FORZAR RENDER
+
+            try {
+                const res = await fetch(`https://nominatim.openstreetmap.org/reverse?lat=${alertData.latitud}&lon=${alertData.longitud}&format=json`);
+                const data = await res.json();
+                this.alertAddress = data.display_name || 'Ubicación desconocida';
+            } catch (e) {
+                this.alertAddress = `Coordenadas: ${alertData.latitud}, ${alertData.longitud}`;
+            }
+            this.cdr.detectChanges(); // FORZAR RENDER LUEGO DEL FETCH
+        });
+    }
+
+    closeAlert() {
+        this.activeAlert = null;
+        this.cdr.detectChanges();
+    }
+
+    ngOnDestroy() {
+        if (this.wsSub) {
+            this.wsSub.unsubscribe();
+        }
+    }
 
     @Output() openMap = new EventEmitter<void>();
     openMapNow() { this.openMap.emit(); }

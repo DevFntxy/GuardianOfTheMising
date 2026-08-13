@@ -35,7 +35,7 @@ class AlertaUpdate(BaseModel):
 class AlertaResponse(AlertaBase):
     id_alerta: int
     id_usuario: int
-    id_dispositivo: int
+    id_dispositivo: Optional[int] = None
     estado: EstadoEnum
     fecha_hora: Optional[datetime] = None
 

@@ -4,6 +4,7 @@ import { Accelerometer } from 'expo-sensors';
 import { apiFetch } from './api';
 
 import { UserService } from './userService';
+import * as Location from 'expo-location';
 
 export const activarBotonPanico = async () => {
     try {
@@ -13,13 +14,32 @@ export const activarBotonPanico = async () => {
             return;
         }
 
+        // Solicitar permisos y obtener ubicación real
+        let lat = 20.2741; // Fallback (Xicotepec de Juárez)
+        let lon = -97.9547;
+        
+        let { status } = await Location.requestForegroundPermissionsAsync();
+        if (status === 'granted') {
+            try {
+                let location = await Location.getCurrentPositionAsync({
+                    accuracy: Location.Accuracy.Highest
+                });
+                lat = location.coords.latitude;
+                lon = location.coords.longitude;
+            } catch (err) {
+                console.log("No se pudo obtener la ubicación fina, usando fallback.");
+            }
+        } else {
+            console.log("Permiso denegado para acceder a la ubicación.");
+        }
+
         await apiFetch('/alertas/panico', {
             method: 'POST',
             body: JSON.stringify({
                 id_usuario: usuarioActual.id, 
-                id_dispositivo: null, // null porque la alerta se disparó desde la app del teléfono, no desde un wearable
-                latitud: 10,
-                longitud: 9,
+                id_dispositivo: null, 
+                latitud: lat,
+                longitud: lon,
                 id_geocerca_mongo: 'zona-segura'
             })
         });
