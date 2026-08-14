@@ -121,5 +121,10 @@ export const UserService = {
                 activa: true
             })
         });
+    },
+
+    // --- Alertas Globales (Heatmap) ---
+    async apiGetAlertas(): Promise<any[]> {
+        return await apiFetch('/alertas/');
     }
 };

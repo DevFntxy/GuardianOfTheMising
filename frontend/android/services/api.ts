@@ -1,6 +1,6 @@
 import * as SecureStore from 'expo-secure-store';
 
-const API_URL = process.env.EXPO_PUBLIC_API_URL || 'http://192.168.1.71:8000';
+const API_URL = process.env.EXPO_PUBLIC_API_URL || 'https://guardian-backend-1234.loca.lt';
 
 export const setAuthToken = async (token: string) => {
     await SecureStore.setItemAsync('access_token', token);
@@ -18,6 +18,7 @@ export const apiFetch = async (endpoint: string, options: RequestInit = {}) => {
     const token = await getAuthToken();
     const headers: HeadersInit = {
         'Content-Type': 'application/json',
+        'Bypass-Tunnel-Reminder': 'true',
         ...options.headers,
     };
 
@@ -32,7 +33,7 @@ export const apiFetch = async (endpoint: string, options: RequestInit = {}) => {
             headers,
         });
     } catch (e: any) {
-        throw new Error(`[Red] ${e.message}. Revisa que tu celular y PC estén en el mismo Wi-Fi y no en datos móviles.`);
+        throw new Error(`Error de conexión: ${e.message}. Revisa si tienes internet o si el túnel está activo.`);
     }
 
     if (!response.ok) {

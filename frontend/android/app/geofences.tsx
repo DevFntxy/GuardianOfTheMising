@@ -19,6 +19,7 @@ export default function Geofences() {
     const [regionActual, setRegionActual] = useState({ latitude: 20.393, longitude: -98.203, latitudeDelta: 0.05, longitudeDelta: 0.05 });
 
     const [geocercasGuardadas, setGeocercasGuardadas] = useState<any[]>([]);
+    const [alertasGlobales, setAlertasGlobales] = useState<any[]>([]);
     const [cargando, setCargando] = useState(true);
 
     useEffect(() => {
@@ -33,21 +34,26 @@ export default function Geofences() {
                     longitudeDelta: 0.01,
                 });
             }
-            cargarGeocercas();
+            cargarDatosMapa();
         };
         iniciarUbicacion();
     }, []);
 
-    const cargarGeocercas = async () => {
+    const cargarDatosMapa = async () => {
         try {
             setCargando(true);
-            const data = await UserService.apiGetGeocercas();
-            setGeocercasGuardadas(data || []);
-            if (data && data.length === 0) {
+            const [geoData, alertasData] = await Promise.all([
+                UserService.apiGetGeocercas().catch(() => []),
+                UserService.apiGetAlertas().catch(() => [])
+            ]);
+            setGeocercasGuardadas(geoData || []);
+            setAlertasGlobales(alertasData || []);
+            
+            if (geoData && geoData.length === 0) {
                 Alert.alert('Geocercas', 'Aún no tienes geocercas guardadas. Usa el botón "Nueva geocerca" para trazar una.');
             }
         } catch (e: any) {
-            console.error('Error cargando geocercas:', e);
+            console.error('Error cargando datos del mapa:', e);
         } finally {
             setCargando(false);
         }
@@ -79,7 +85,7 @@ export default function Geofences() {
             
             setModoDibujo(false);
             setPuntos([]);
-            cargarGeocercas(); // recargar
+            cargarDatosMapa(); // recargar
         } catch (e: any) {
             Alert.alert('Error', e.message || 'Error al guardar la geocerca');
         }
@@ -88,11 +94,11 @@ export default function Geofences() {
     return (
         <SafeAreaView className="flex-1 bg-mint-50">
             <View className="px-5 pt-4 pb-3 bg-white">
-                <Text className="text-xl font-bold text-slate-900">Geocercas</Text>
+                <Text className="text-xl font-bold text-slate-900">Zonas de Riesgo</Text>
             </View>
             {/* Contenedor del mapa */}
             <View className="flex-1 mx-4 my-4 rounded-2xl overflow-hidden shadow-sm">
-                {cargando && <Text className="absolute top-4 left-4 z-10 font-bold text-slate-900 bg-white/70 px-2 py-1 rounded">Cargando polígonos...</Text>}
+                {cargando && <Text className="absolute top-4 left-4 z-10 font-bold text-slate-900 bg-white/70 px-2 py-1 rounded">Cargando mapa de calor...</Text>}
                 <MapView 
                     style={{ flex: 1 }} 
                     region={regionActual}
@@ -107,6 +113,25 @@ export default function Geofences() {
                         <Marker key={`dibujo-${index}`} coordinate={punto} pinColor="#1a5c4a" />
                     ))}
 
+                    {/* Renderizar Heatmap de Alertas Comunitarias */}
+                    {alertasGlobales.map((alerta, index) => {
+                        if (!alerta.latitud || !alerta.longitud) return null;
+                        
+                        const isPanico = alerta.nivel_riesgo === 'alta';
+                        // Rojo para pánico, Amarillo para seguridad
+                        const fillColor = isPanico ? "rgba(255, 0, 0, 0.15)" : "rgba(255, 204, 0, 0.15)";
+                        
+                        return (
+                            <Circle 
+                                key={`alerta-${alerta.id_alerta || index}`} 
+                                center={{ latitude: alerta.latitud, longitude: alerta.longitud }} 
+                                radius={200} 
+                                fillColor={fillColor} 
+                                strokeColor="transparent" 
+                            />
+                        );
+                    })}
+
                     {/* Renderizar geocercas guardadas desde MySQL/Mongo */}
                     {geocercasGuardadas.map((geo, index) => {
                         if (geo.ubicacion?.type === 'Point' && geo.ubicacion.coordinates) {
@@ -114,12 +139,8 @@ export default function Geofences() {
                                 latitude: geo.ubicacion.coordinates[1],
                                 longitude: geo.ubicacion.coordinates[0]
                             };
-                            const isRiesgo = geo.tipo_zona === 'riesgo';
-                            const fillColor = isRiesgo ? "rgba(200, 50, 50, 0.25)" : "rgba(26, 143, 111, 0.25)";
-                            const strokeColor = isRiesgo ? "#c83232" : "#1a8f6f";
-                            
                             return (
-                                <Circle key={geo.id || index} center={center} radius={geo.radio_metros || 150} fillColor={fillColor} strokeColor={strokeColor} strokeWidth={2} />
+                                <Circle key={`geo-${geo.id || index}`} center={center} radius={geo.radio_metros || 150} fillColor="rgba(26, 143, 111, 0.15)" strokeColor="#1a8f6f" strokeWidth={2} />
                             );
                         }
                         return null;

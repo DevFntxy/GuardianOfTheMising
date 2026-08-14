@@ -1,28 +1,40 @@
-# 🚀 Guía de Inicio: Guardian of the Missing
+# 🚀 Guía de Inicio Oficial: Guardian of the Missing (Red Global)
 
-Este documento contiene todos los comandos exactos y las credenciales que necesitas para levantar el ecosistema completo del proyecto desde cero en tu computadora en cualquier momento.
+Este documento contiene todos los comandos exactos y las credenciales que necesitas para levantar el ecosistema completo del proyecto desde cero en tu computadora. Con esta configuración, **tu app móvil funcionará desde cualquier lugar con Datos Móviles (4G/5G)** sin importar en qué red Wi-Fi se encuentre tu computadora.
 
-Para trabajar de la manera más cómoda, te recomiendo **abrir 3 ventanas de terminal (consola) distintas**, una para cada parte del proyecto.
+Para trabajar de la manera más cómoda, abre **3 ventanas de terminal (consola) distintas**, una para cada parte del servidor.
 
 ---
 
-## 1️⃣ Backend (FastAPI y WebSockets)
-Este es el cerebro del sistema. Se encarga de conectar la base de datos (MySQL y MongoDB) y repartir los mensajes en tiempo real.
+## 1️⃣ Servidor Backend (FastAPI)
+Este es el cerebro del sistema. Se encarga de conectar la base de datos y repartir los mensajes (alertas, mapas de calor, geocercas) en tiempo real.
 
-**Comandos:**
-```bash
+**Comandos (Terminal 1):**
+```cmd
 cd C:\Users\garci\Desktop\GuardianOfTheMising
 python -m uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload
 ```
-*Nota:* El comando `--host 0.0.0.0` es vital para que tu celular (que está en tu red Wi-Fi) pueda comunicarse con la computadora.
 
 ---
 
-## 2️⃣ Página Web (Angular)
-Este es el panel de control o Dashboard, donde recibirás las alertas en tiempo real y verás el mapa.
+## 2️⃣ Túnel Público (Localtunnel)
+Para que el celular en la calle (con datos móviles) pueda llegar a tu computadora (que está escondida detrás del internet de la universidad o tu casa), necesitamos un "túnel" público.
 
-**Comandos:**
-```bash
+**Comandos (Terminal 2):**
+Abre una nueva ventana y ejecuta:
+```cmd
+npx localtunnel --port 8000 --subdomain guardian-backend-1234
+```
+*Asegúrate de que la terminal responda:* `your url is: https://guardian-backend-1234.loca.lt`.
+*(Si alguna vez el subdominio está ocupado, puedes cambiar "1234" por otro número, pero tendrías que actualizar también el archivo `.env` del celular).*
+
+---
+
+## 3️⃣ Panel de Control Web (Angular)
+Este es el Dashboard donde la policía o familiares recibirán las alertas en tiempo real y verán el mapa.
+
+**Comandos (Terminal 3):**
+```cmd
 cd C:\Users\garci\Desktop\GuardianOfTheMising\frontend\web
 npm start
 ```
@@ -30,34 +42,39 @@ npm start
 
 > [!TIP]
 > **Credenciales de Prueba (Web):**
-> Al estar en versión de pruebas, usa estos datos para entrar al Dashboard:
 > - **Correo:** `diegomiguel04@gmail.com`
 > - **Contraseña:** `diego123#`
 
 ---
 
-## 3️⃣ Aplicación Móvil (React Native / Expo)
-Esta es la app que llevas en el bolsillo con el botón de pánico de alta precisión.
+## 4️⃣ Aplicación Móvil Nativa (Android APK)
+¡Tu app ya no depende de Expo Go! Es una aplicación Android nativa, real e independiente.
 
-**Comandos:**
-```bash
-cd C:\Users\garci\Desktop\GuardianOfTheMising\frontend\android
-npm start
+**Instalación Rápida:**
+El archivo `.apk` final y listo para instalar siempre lo encontrarás en esta ruta:
+`C:\Users\garci\Desktop\GuardianOfTheMising\frontend\android\android\app\build\outputs\apk\release\app-release.apk`
+Simplemente pásatelo por cable o correo a tu celular e instálalo.
+
+**¿Cómo actualizar la App si le cambias código al diseño?**
+Si haces modificaciones en la interfaz o funciones de React Native, solo abre una consola, entra a la carpeta de Android y re-empaqueta la app con este comando (toma unos segundos):
+```cmd
+cd C:\Users\garci\Desktop\GuardianOfTheMising\frontend\android\android
+gradlew assembleRelease
 ```
-*(También puedes usar `npx expo start`)*.
-
-Esto te arrojará un código QR grande en la consola. Solo debes escanearlo con la cámara de tu celular (o usar la app de Expo Go) para que se instale la aplicación al vuelo.
-
-> [!IMPORTANT]
-> **Regla de Oro para el Celular:**
-> 1. Asegúrate de que tu celular y tu computadora estén conectados **al mismo módem Wi-Fi**. Si tu celular está en "Datos Móviles", no podrá enviarle el mensaje al Backend de tu computadora.
-> 2. Si la IP de tu computadora cambia (suele pasar cuando reinicias el módem), debes actualizar el archivo `frontend/android/services/api.ts` con tu nueva dirección IPv4 local (ejemplo: `http://192.168.1.71:8000`).
+El nuevo `.apk` con tus cambios reemplazará automáticamente al anterior en la carpeta.
 
 ---
 
-## 🔄 Flujo de Prueba
-Cuando quieras demostrarle a alguien el proyecto, sigue este orden:
-1. Enciende las 3 terminales (Backend, Web, App Móvil).
-2. Inicia sesión en la Web en tu computadora y déjala a la vista.
-3. Toma tu celular real y presiona el **Botón de Pánico**.
-4. ¡El celular usará tu antena GPS, enviará el dato al Backend por Wi-Fi, y el Backend se lo inyectará a tu navegador web usando WebSockets instantáneamente para mostrarte la calle exacta!
+## 🔄 Flujo de Prueba / Presentación Final
+Cuando quieras demostrarle el proyecto a tus maestros en la Universidad, sigue este orden exacto:
+
+1. Levanta el **Backend** en la Terminal 1.
+2. Levanta el **Localtunnel** en la Terminal 2. *(Obligatorio, de lo contrario la app celular arrojará error de red).*
+3. Levanta la **Página Web** en la Terminal 3 e inicia sesión. Déjala a la vista en pantalla completa.
+4. Apaga el Wi-Fi de tu celular Android y déjalo **solo en Datos Móviles (4G)**.
+5. Abre la aplicación de `GuardianOfTheMissing` en tu celular.
+6. **Magia 1:** Presiona el **Botón de Pánico**. Verás cómo la alerta viaja desde la calle directamente a la pantalla de tu computadora en fracciones de segundo usando WebSockets.
+7. **Magia 2:** Ve a `Contactos` en la app, toca un familiar y presiona **"Mensaje WhatsApp (SOS)"**. Te abrirá WhatsApp con un link de Google Maps con tu latitud y longitud en vivo.
+8. **Magia 3:** Ve a `Geocercas` y admira cómo las alertas se enciman para crear el **Mapa de Calor** en zonas rojas y amarillas para la comunidad.
+
+¡Éxito total en la presentación! 🚀

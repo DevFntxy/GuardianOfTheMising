@@ -50,6 +50,34 @@ export class DashboardComponent implements OnInit, OnDestroy {
         this.cdr.detectChanges();
     }
 
+    async triggerWebPanic() {
+        const usuarioActual = this.users.getUsuarioActual();
+        if (!usuarioActual) {
+            alert('Error: No hay usuario en sesión web.');
+            return;
+        }
+        
+        try {
+            const res = await fetch('http://localhost:8000/alertas/panico', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    id_usuario: usuarioActual.id,
+                    latitud: 20.2741,
+                    longitud: -97.9547,
+                    id_geocerca_mongo: 'web-test'
+                })
+            });
+            if (res.ok) {
+                console.log('Alerta web enviada con éxito');
+            } else {
+                console.error('Error al enviar alerta web', await res.text());
+            }
+        } catch(e) {
+            console.error('Error de red al enviar alerta web', e);
+        }
+    }
+
     ngOnDestroy() {
         if (this.wsSub) {
             this.wsSub.unsubscribe();

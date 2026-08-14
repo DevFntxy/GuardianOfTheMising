@@ -1,7 +1,8 @@
-﻿import React, { useState, useEffect } from 'react';
-import { View, Text, TextInput, TouchableOpacity, ScrollView, Modal, Alert } from 'react-native';
+import React, { useState, useEffect } from 'react';
+import { View, Text, TextInput, TouchableOpacity, ScrollView, Modal, Alert, Linking, ActionSheetIOS, Platform } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import * as DeviceContacts from 'expo-contacts';
+import * as Location from 'expo-location';
 
 type ContactoAgenda = {
     id?: string;
@@ -65,6 +66,42 @@ export default function Contacts() {
                 }
             ]
         );
+    };
+
+    const manejarAccionContacto = (contacto: ContactoEmergencia) => {
+        Alert.alert(
+            `Opciones para ${contacto.nombre}`,
+            "¿Qué deseas hacer en caso de emergencia?",
+            [
+                { text: "Llamar", onPress: () => Linking.openURL(`tel:${contacto.telefono}`) },
+                { text: "Mensaje WhatsApp (SOS)", onPress: () => enviarWhatsAppEmergencia(contacto) },
+                { text: "Cancelar", style: "cancel" }
+            ],
+            { cancelable: true }
+        );
+    };
+
+    const enviarWhatsAppEmergencia = async (contacto: ContactoEmergencia) => {
+        try {
+            let { status } = await Location.requestForegroundPermissionsAsync();
+            let linkUbicacion = "No pude obtener mi ubicación.";
+            if (status === 'granted') {
+                const loc = await Location.getCurrentPositionAsync({ accuracy: Location.Accuracy.High });
+                linkUbicacion = `https://maps.google.com/?q=${loc.coords.latitude},${loc.coords.longitude}`;
+            }
+
+            const mensaje = `¡ESTOY EN PELIGRO! Por favor ayúdame. Esta es mi última ubicación registrada: ${linkUbicacion}`;
+            const url = `whatsapp://send?phone=${contacto.telefono}&text=${encodeURIComponent(mensaje)}`;
+            
+            const supported = await Linking.canOpenURL(url);
+            if (supported) {
+                await Linking.openURL(url);
+            } else {
+                Alert.alert("Error", "WhatsApp no está instalado en este dispositivo.");
+            }
+        } catch (error) {
+            Alert.alert("Error", "Ocurrió un problema al enviar el mensaje.");
+        }
     };
 
     // --- Filtrado por búsqueda ---
@@ -154,7 +191,7 @@ export default function Contacts() {
                             </Text>
                         )}
                         {contactosPaginados.map((contacto) => (
-                            <View key={contacto.id_contacto} className="bg-white rounded-2xl p-4 mb-3 shadow-sm">
+                            <TouchableOpacity key={contacto.id_contacto} className="bg-white rounded-2xl p-4 mb-3 shadow-sm" onPress={() => manejarAccionContacto(contacto)}>
                                 <View className="flex-row justify-between items-center">
                                     <View className="flex-row items-center">
                                         <View className="w-8 h-8 rounded-full bg-slate-900 mr-2" />
@@ -168,7 +205,7 @@ export default function Contacts() {
                                         </TouchableOpacity>
                                     </View>
                                 </View>
-                            </View>
+                            </TouchableOpacity>
                         ))}
                     </>
                 )}
