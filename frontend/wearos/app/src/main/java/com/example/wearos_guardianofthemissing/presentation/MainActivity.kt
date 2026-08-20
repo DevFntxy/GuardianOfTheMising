@@ -50,6 +50,43 @@ import androidx.wear.compose.material.ButtonDefaults
 import androidx.wear.compose.material.Icon
 import androidx.wear.compose.material.MaterialTheme
 import androidx.wear.compose.material.Text
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.offset
+import androidx.compose.material.icons.filled.Menu
+
+/**
+ * Configuración de cada tipo de alerta disponible.
+ * Para añadir un nuevo tipo, agrega una entrada aquí con sus propios
+ * textos, color y contenido de notificación. Aparecerá automáticamente
+ * en el menú de selección sin tocar el resto del código.
+ */
+enum class AlertType(
+    val menuLabel: String,
+    val buttonTitle: String,
+    val buttonSubtitle: String,
+    val color: Color,
+    val notificationTitle: String,
+    val notificationText: String
+) {
+    PANICO(
+        menuLabel = "Pánico",
+        buttonTitle = "Botón de pánico",
+        buttonSubtitle = "Presiona para enviar una alerta",
+        color = Color(0xff9f0712),
+        notificationTitle = "Alerta activada",
+        notificationText = "Se presionó el botón principal."
+    ),
+    REPORTE(
+        menuLabel = "Reporte",
+        buttonTitle = "Botón de reporte",
+        buttonSubtitle = "Presiona para enviar un aviso de reporte en tu zona",
+        color = Color(0xff1447e6),
+        notificationTitle = "Reporte enviado",
+        notificationText = "Se presionó el botón de reporte."
+    )
+    // Nuevo tipo de alerta: agrega aquí otra entrada, ej.
+    // MEDICO(menuLabel = "Médico", buttonTitle = "...", ..., color = Color(0xff...))
+}
 
 class MainActivity : ComponentActivity() {
 
@@ -64,7 +101,7 @@ class MainActivity : ComponentActivity() {
         pedirPermisoNotificaciones()
 
         setContent {
-            WearApp(onBotonPrincipalPresionado = { manejarClicBotonPrincipal() })
+            WearApp(onBotonPrincipalPresionado = { tipo -> manejarClicBotonPrincipal(tipo) })
         }
     }
 
@@ -92,13 +129,23 @@ class MainActivity : ComponentActivity() {
         }
     }
 
-    private fun manejarClicBotonPrincipal() {
-        // TODO: Aquí añadirás la lógica real más adelante (ej. enviar alerta, guardar evento, etc.)
+    private fun manejarClicBotonPrincipal(tipo: AlertType) {
+        mostrarNotificacion(tipo)
 
-        mostrarNotificacion()
+        // Lógica adicional específica por tipo de alerta.
+        // Añade aquí un nuevo "when" case por cada AlertType que definas en el enum.
+        when (tipo) {
+            AlertType.PANICO -> {
+                // TODO: lógica adicional específica del botón de pánico
+            }
+            AlertType.REPORTE -> {
+                // TODO: Aquí añade el resto de la lógica del botón de reporte
+                // (ej. enviar ubicación, guardar el reporte, llamar a tu backend, etc.)
+            }
+        }
     }
 
-    private fun mostrarNotificacion() {
+    private fun mostrarNotificacion(tipo: AlertType) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
             if (ActivityCompat.checkSelfPermission(
                     this,
@@ -111,8 +158,8 @@ class MainActivity : ComponentActivity() {
 
         val notificacion = NotificationCompat.Builder(this, CANAL_ID)
             .setSmallIcon(android.R.drawable.ic_dialog_alert)
-            .setContentTitle("Alerta activada")
-            .setContentText("Se presionó el botón principal.")
+            .setContentTitle(tipo.notificationTitle)
+            .setContentText(tipo.notificationText)
             .setPriority(NotificationCompat.PRIORITY_HIGH)
             .build()
 
@@ -126,20 +173,25 @@ class MainActivity : ComponentActivity() {
 }
 
 @Composable
-fun WearApp(onBotonPrincipalPresionado: () -> Unit) {
+fun WearApp(onBotonPrincipalPresionado: (AlertType) -> Unit) {
+    var tipoSeleccionado by remember { mutableStateOf(AlertType.PANICO) }
+    var menuAbierto by remember { mutableStateOf(false) }
+
+    // Diámetro editable del botón circular de selección de alerta
+    val diametroBotonMenu = 40.dp
+
     MaterialTheme {
         Box(modifier = Modifier.fillMaxSize()) {
 
-            // Botón rojo que abarca casi toda la pantalla, con un borde corto alrededor
+            // Botón principal: cambia color, textos y acción según tipoSeleccionado
             Button(
-                onClick = onBotonPrincipalPresionado,
+                onClick = { onBotonPrincipalPresionado(tipoSeleccionado) },
                 modifier = Modifier
                     .fillMaxSize()
                     .padding(12.dp)
                     .align(Alignment.Center),
-                colors = ButtonDefaults.buttonColors(backgroundColor = Color(0xff9f0712))
+                colors = ButtonDefaults.buttonColors(backgroundColor = tipoSeleccionado.color)
             ) {
-                // Contenido centrado: título + texto descriptivo
                 Column(
                     modifier = Modifier
                         .fillMaxWidth()
@@ -148,14 +200,14 @@ fun WearApp(onBotonPrincipalPresionado: () -> Unit) {
                     verticalArrangement = Arrangement.Center
                 ) {
                     Text(
-                        text = "Botón de pánico",
+                        text = tipoSeleccionado.buttonTitle,
                         color = Color.White,
                         fontSize = 16.sp,
                         fontWeight = FontWeight.Bold,
                         textAlign = TextAlign.Center
                     )
                     Text(
-                        text = "Presiona para enviar una alerta",
+                        text = tipoSeleccionado.buttonSubtitle,
                         color = Color.White,
                         fontSize = 11.sp,
                         fontWeight = FontWeight.Medium,
@@ -165,8 +217,86 @@ fun WearApp(onBotonPrincipalPresionado: () -> Unit) {
                 }
             }
 
-            // Ícono de conectividad en la esquina, responsivo a pantalla redonda
             IconoConectividad(modifier = Modifier.align(Alignment.TopCenter))
+
+            // Botón circular que sobresale del borde inferior de la pantalla.
+            // Se dibuja después del botón principal, por lo que queda por encima (z-order).
+            // El offset hacia abajo de la mitad del diámetro deja solo el medio círculo
+            // superior visible, ya que la mitad inferior queda fuera de los límites de pantalla.
+            Box(
+                modifier = Modifier
+                    .align(Alignment.BottomCenter)
+                    .offset(y = diametroBotonMenu / 2)
+                    .size(diametroBotonMenu)
+                    .background(color = Color(0xff364153), shape = CircleShape)
+                    .clickable { menuAbierto = true },
+                contentAlignment = Alignment.Center
+            ) {
+                Icon(
+                    imageVector = Icons.Default.Menu,
+                    contentDescription = "Seleccionar tipo de alerta",
+                    tint = Color.White,
+                    modifier = Modifier.size(diametroBotonMenu * 0.5f)
+                )
+            }
+
+            // Menú de selección a pantalla completa, se dibuja al final para quedar
+            // por encima de todo lo demás.
+            if (menuAbierto) {
+                MenuAlertas(
+                    tipoSeleccionado = tipoSeleccionado,
+                    onSeleccionar = { tipoSeleccionado = it },
+                    onCerrar = { menuAbierto = false }
+                )
+            }
+        }
+    }
+}
+
+@Composable
+fun MenuAlertas(
+    tipoSeleccionado: AlertType,
+    onSeleccionar: (AlertType) -> Unit,
+    onCerrar: () -> Unit
+) {
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(Color.Black.copy(alpha = 0.95f))
+            .clickable(enabled = false) {} // evita que un toque en el fondo se propague al botón de abajo
+    ) {
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(horizontal = 12.dp, vertical = 20.dp),
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.spacedBy(8.dp, Alignment.CenterVertically)
+        ) {
+            Text(
+                text = "Selecciona el tipo de alerta",
+                color = Color.White,
+                fontSize = 12.sp,
+                fontWeight = FontWeight.Bold,
+                textAlign = TextAlign.Center,
+                modifier = Modifier.padding(bottom = 4.dp)
+            )
+
+            // Lista de opciones de alerta. Se genera automáticamente a partir del enum
+            // AlertType, así que agregar un nuevo tipo ahí lo agrega también aquí.
+            AlertType.values().forEach { tipo ->
+                Button(
+                    onClick = {
+                        onSeleccionar(tipo)
+                        onCerrar()
+                    },
+                    modifier = Modifier.fillMaxWidth(0.85f),
+                    colors = ButtonDefaults.buttonColors(
+                        backgroundColor = if (tipo == tipoSeleccionado) tipo.color else Color.DarkGray
+                    )
+                ) {
+                    Text(text = tipo.menuLabel, color = Color.White, fontSize = 13.sp)
+                }
+            }
         }
     }
 }
