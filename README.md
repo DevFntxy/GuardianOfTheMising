@@ -220,6 +220,66 @@ El sistema permite:
 
 ---
 
+# Resultados del Proyecto
+
+En esta sección se muestran las evidencias visuales de las plataformas desarrolladas. Reemplaza las rutas de ejemplo por los nombres de tus imágenes dentro de la carpeta `img/resultados/`.
+
+## Aplicación Móvil
+
+
+<p align="center">
+<img src="img/c" alt="Resultado de la aplicación móvil" width="300" />
+</p>
+
+<!-- Puedes agregar más imágenes copiando el bloque anterior. -->
+
+## Wear OS
+
+pantalla principal
+
+<p align="center">
+<img src="img/capturas/wearos/pantallaprincipal.png" alt="Resultado de la aplicación Wear OS" width="300" />
+</p>
+Prantalla principal la cual contiene 3 apartados importantes
+        -Apartado que avisa cuando el dispositivo se encuentra en una zona seguro o inseguro depende el mapa de calor
+        -Boton de Panico: El componente mas importante de la app wearos, el cual envia un reporte con la ubicacion en tiempo real para generar un reporte y marcar en el app web en un mapa de calor
+        -Boton de contactos: Un acceso rapido a contactos de confianza el cual mandar la ubicacion de las persona pidiendo ayuda
+--Boton panico
+<p align="center">
+<img src="img/capturas/wearos/pantallacarga.png" alt="Resultado de la aplicación Wear OS" width="300" />
+</p>
+<p align="center">
+<img src="img/capturas/wearos/AlertaEnviada.png" alt="Resultado de la aplicación Wear OS" width="300" />
+</p>
+-boton contactos
+<p align="center">
+<img src="img/capturas/wearos/pantallacontactos.png" alt="Resultado de la aplicación Wear OS" width="300" />
+</p>
+--reporte de wearos
+<p align="center">
+<img src="img/capturas/wearos/reportedeWearos.png" alt="Resultado de la aplicación Wear OS" width="300" />
+</p>
+
+## Plataforma Web
+
+Capturas del panel administrativo y de las funcionalidades disponibles en la plataforma web.
+
+--login
+
+<p align="center">
+<img src="img/capturas/web/login.png" alt="Resultado de la plataforma web" width="800" />
+</p>
+
+--Dashboard y apartado de administracion
+<p align="center">
+<img src="img/capturas/web/pantalla principal.png" alt="Resultado de la plataforma web" width="800" />
+</p>
+
+
+<!-- Puedes agregar más imágenes copiando el bloque anterior. -->
+
+---
+
 # Documentación
 
 La documentación del proyecto se encuentra organizada para facilitar el mantenimiento y evolución del sistema.
