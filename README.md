@@ -226,12 +226,19 @@ En esta sección se muestran las evidencias visuales de las plataformas desarrol
 
 ## Aplicación Móvil
 
+-Login
 
 <p align="center">
-<img src="img/c" alt="Resultado de la aplicación móvil" width="300" />
+<img src="img/capturas/movil/pantallaprincipal.png" alt="Resultado de la aplicación móvil" width="300" />
 </p>
 
-<!-- Puedes agregar más imágenes copiando el bloque anterior. -->
+Pantalla principal con boton de con los apartados correspindientes y necesarios
+<p align="center">
+<img src="img/capturas/movil/pantallaprincipal.png" alt="Resultado de la aplicación móvil" width="300" />
+</p>
+
+
+
 
 ## Wear OS
 
@@ -271,12 +278,41 @@ Capturas del panel administrativo y de las funcionalidades disponibles en la pla
 </p>
 
 --Dashboard y apartado de administracion
-<p align="center">
-<img src="img/capturas/web/pantalla principal.png" alt="Resultado de la plataforma web" width="800" />
+
+apartado principal
+-Lista de las distintas funciones
+  -Geocercas
+  <p align="center">
+<img src="img/capturas/web/geocercas.png" alt="Resultado de la plataforma web" width="800" />
 </p>
-
-
-<!-- Puedes agregar más imágenes copiando el bloque anterior. -->
+  -Historial de todos los reportes
+  <p align="center">
+<img src="img/capturas/web/historialReportes.png alt="Resultado de la plataforma web" width="800" />
+</p>
+  -Contactos
+    <p align="center">
+<img src="img/capturas/web/contactos.png"alt=Resultado de la plataforma web" width="800" />
+</p>
+  -Grupos 
+    <p align="center">
+<img src="img/capturas/web/grupos.png" alt=Resultado de la plataforma web width="800" />
+</p>
+  -Cerrar sesion
+-Graficas
+Muestra las graficas mas impoetantes con el analisis de todos los reportes
+-Ultimas alertas
+Este muestra las ultimas alertas
+<p align="center">
+<img src="img/capturas/web/ulrtimasalertas.png" alt="Resultado de la plataforma web" width="800" />
+</p>
+        --Al dar click a cada una de las alertas las muestra en el mapa de calor con la informacion correspondiente
+        <p align="center">
+<img src="img/capturas/web/punto.png" alt="Resultado de la plataforma web" width="800" />
+</p>
+-perfil
+        <p align="center">
+<img src="img/capturas/web/perfil.png" alt="Resultado de la plataforma web" width="800" />
+</p>
 
 ---
 
