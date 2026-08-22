@@ -222,97 +222,153 @@ El sistema permite:
 
 # Resultados del Proyecto
 
-En esta sección se muestran las evidencias visuales de las plataformas desarrolladas. Reemplaza las rutas de ejemplo por los nombres de tus imágenes dentro de la carpeta `img/resultados/`.
+Esta sección reúne las evidencias visuales de las tres plataformas que integran GuardianOfTheMissing. Las capturas se encuentran organizadas en `img/capturas/` y muestran los principales flujos de usuario, monitoreo y administración.
 
 ## Aplicación Móvil
 
--Login
+La aplicación móvil para Android permite al usuario registrarse, iniciar sesión, administrar su perfil y contactos de emergencia, consultar geocercas e historial, y enviar alertas durante una situación de riesgo.
 
-<p align="center">
-<img src="img/capturas/movil/pantallaprincipal.png" alt="Resultado de la aplicación móvil" width="300" />
-</p>
+### Acceso y cuenta
 
-Pantalla principal con boton de con los apartados correspindientes y necesarios
-<p align="center">
-<img src="img/capturas/movil/pantallaprincipal.png" alt="Resultado de la aplicación móvil" width="300" />
-</p>
+#### Inicio de sesión
+
+<p align="center"><img src="img/capturas/movil/login.png" alt="Inicio de sesión en la aplicación móvil" width="260"></p>
+
+#### Registro de usuario
+
+<p align="center"><img src="img/capturas/movil/registro.png" alt="Registro de usuario en la aplicación móvil" width="260"></p>
+
+#### Recuperación de contraseña
+
+<p align="center"><img src="img/capturas/movil/recuperarcontrase%C3%B1a.png" alt="Recuperación de contraseña" width="260"></p>
+
+### Operación y seguridad
+
+#### Pantalla principal
+
+<p align="center"><img src="img/capturas/movil/pantallaprincipal.png" alt="Pantalla principal de la aplicación móvil" width="260"></p>
+
+#### Perfil
+
+<p align="center"><img src="img/capturas/movil/perfil.png" alt="Perfil del usuario móvil" width="260"></p>
+
+#### Contactos de emergencia
+
+<p align="center"><img src="img/capturas/movil/contactosemergencia.png" alt="Contactos de emergencia" width="260"></p>
+
+#### Geocercas
+
+<p align="center"><img src="img/capturas/movil/geocercas.png" alt="Gestión de geocercas en la aplicación móvil" width="260"></p>
+
+#### Historial
+
+<p align="center"><img src="img/capturas/movil/historial.png" alt="Historial de alertas en la aplicación móvil" width="260"></p>
+
+#### Últimas alertas
+
+<p align="center"><img src="img/capturas/movil/ultimasalertas.png" alt="Últimas alertas de la aplicación móvil" width="260"></p>
 
 
 
+#### Reporte enviado
+
+<p align="center"><img src="img/capturas/movil/reporteenviado.png" alt="Reporte enviado desde la aplicación móvil" width="260"></p>
+
+#### Mensaje enviado
+
+<p align="center"><img src="img/capturas/movil/mensajeenviado.png" alt="Mensaje enviado desde la aplicación móvil" width="260"></p>
 
 ## Wear OS
 
-pantalla principal
+La aplicación para Wear OS ofrece acceso rápido a las funciones esenciales durante una emergencia: conocer el estado de la zona, enviar un botón de pánico, consultar contactos de confianza y confirmar el reporte generado.
 
-<p align="center">
-<img src="img/capturas/wearos/pantallaprincipal.png" alt="Resultado de la aplicación Wear OS" width="300" />
-</p>
-Prantalla principal la cual contiene 3 apartados importantes
-        -Apartado que avisa cuando el dispositivo se encuentra en una zona seguro o inseguro depende el mapa de calor
-        -Boton de Panico: El componente mas importante de la app wearos, el cual envia un reporte con la ubicacion en tiempo real para generar un reporte y marcar en el app web en un mapa de calor
-        -Boton de contactos: Un acceso rapido a contactos de confianza el cual mandar la ubicacion de las persona pidiendo ayuda
---Boton panico
-<p align="center">
-<img src="img/capturas/wearos/pantallacarga.png" alt="Resultado de la aplicación Wear OS" width="300" />
-</p>
-<p align="center">
-<img src="img/capturas/wearos/AlertaEnviada.png" alt="Resultado de la aplicación Wear OS" width="300" />
-</p>
--boton contactos
-<p align="center">
-<img src="img/capturas/wearos/pantallacontactos.png" alt="Resultado de la aplicación Wear OS" width="300" />
-</p>
---reporte de wearos
-<p align="center">
-<img src="img/capturas/wearos/reportedeWearos.png" alt="Resultado de la aplicación Wear OS" width="300" />
-</p>
+#### Pantalla principal
+
+Presenta el estado de la zona y los accesos principales.
+
+<p align="center"><img src="img/capturas/wearos/pantallaprincipal.png" alt="Pantalla principal de Wear OS" width="300"></p>
+
+#### Envío de alerta
+
+El usuario activa el botón de pánico y visualiza el estado de carga.
+
+<p align="center"><img src="img/capturas/wearos/pantallacarga.png" alt="Carga del envío de alerta en Wear OS" width="300"></p>
+
+#### Alerta enviada
+
+Confirma que el reporte fue enviado correctamente.
+
+<p align="center"><img src="img/capturas/wearos/AlertaEnviada.png" alt="Alerta enviada desde Wear OS" width="300"></p>
+
+#### Contactos de confianza
+
+Permite acceder rápidamente a los contactos registrados.
+
+<p align="center"><img src="img/capturas/wearos/pantallacontactos.png" alt="Contactos de confianza en Wear OS" width="300"></p>
+
+#### Reporte de Wear OS
+
+Muestra la información asociada al reporte generado.
+
+<p align="center"><img src="img/capturas/wearos/reportedeWearos.png" alt="Reporte generado desde Wear OS" width="300"></p>
 
 ## Plataforma Web
 
-Capturas del panel administrativo y de las funcionalidades disponibles en la plataforma web.
+La plataforma web administrativa concentra la gestión y supervisión del sistema. Desde ella se pueden consultar alertas, visualizar ubicaciones en el mapa, administrar geocercas, contactos y grupos, revisar historiales y actualizar el perfil del administrador.
 
---login
+#### Inicio de sesión
 
-<p align="center">
-<img src="img/capturas/web/login.png" alt="Resultado de la plataforma web" width="800" />
-</p>
+Acceso seguro al panel administrativo.
 
---Dashboard y apartado de administracion
+<p align="center"><img src="img/capturas/web/login.png" alt="Inicio de sesión de la plataforma web" width="720"></p>
 
-apartado principal
--Lista de las distintas funciones
-  -Geocercas
-  <p align="center">
-<img src="img/capturas/web/geocercas.png" alt="Resultado de la plataforma web" width="800" />
-</p>
-  -Historial de todos los reportes
-  <p align="center">
-<img src="img/capturas/web/historialReportes.png alt="Resultado de la plataforma web" width="800" />
-</p>
-  -Contactos
-    <p align="center">
-<img src="img/capturas/web/contactos.png"alt=Resultado de la plataforma web" width="800" />
-</p>
-  -Grupos 
-    <p align="center">
-<img src="img/capturas/web/grupos.png" alt=Resultado de la plataforma web width="800" />
-</p>
-  -Cerrar sesion
--Graficas
-Muestra las graficas mas impoetantes con el analisis de todos los reportes
--Ultimas alertas
-Este muestra las ultimas alertas
-<p align="center">
-<img src="img/capturas/web/ulrtimasalertas.png" alt="Resultado de la plataforma web" width="800" />
-</p>
-        --Al dar click a cada una de las alertas las muestra en el mapa de calor con la informacion correspondiente
-        <p align="center">
-<img src="img/capturas/web/punto.png" alt="Resultado de la plataforma web" width="800" />
-</p>
--perfil
-        <p align="center">
-<img src="img/capturas/web/perfil.png" alt="Resultado de la plataforma web" width="800" />
-</p>
+#### Pantalla principal
+
+Vista general de los módulos administrativos disponibles.
+
+<p align="center"><img src="img/capturas/web/pantalla%20principal.png" alt="Pantalla principal de la plataforma web" width="720"></p>
+
+#### Geocercas
+
+Consulta y administración de zonas configuradas.
+
+<p align="center"><img src="img/capturas/web/geocercas.png" alt="Módulo de geocercas de la plataforma web" width="720"></p>
+
+#### Historial de reportes
+
+Consulta de los incidentes registrados en el sistema.
+
+<p align="center"><img src="img/capturas/web/historialReportes.png" alt="Historial de reportes de la plataforma web" width="720"></p>
+
+#### Contactos
+
+Administración de los contactos asociados a las alertas.
+
+<p align="center"><img src="img/capturas/web/contactos.png" alt="Módulo de contactos de la plataforma web" width="720"></p>
+
+#### Grupos
+
+Organización y administración de grupos de usuarios.
+
+<p align="center"><img src="img/capturas/web/grupos.png" alt="Módulo de grupos de la plataforma web" width="720"></p>
+
+#### Últimas alertas
+
+Visualización de los eventos más recientes.
+
+<p align="center"><img src="img/capturas/web/ulrtimasalertas.png" alt="Últimas alertas de la plataforma web" width="720"></p>
+
+#### Ubicación del reporte
+
+Consulta de la alerta seleccionada en el mapa.
+
+<p align="center"><img src="img/capturas/web/punto.png" alt="Ubicación de un reporte en el mapa" width="720"></p>
+
+#### Perfil
+
+Consulta y actualización de la información del administrador.
+
+<p align="center"><img src="img/capturas/web/perfil.png" alt="Perfil del administrador en la plataforma web" width="720"></p>
 
 ---
 
